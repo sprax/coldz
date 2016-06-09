@@ -19,16 +19,17 @@ readImgLabels(char *pathname)
     List img_labels;
 
     img_labels = NULL;
-    errno_t err = fopen_s(&fp, pathname, "r")
-        if (err) {
-            /*
-            warn("readImgLabels(%s) [%s]: err fopen_s, returning NULL",pathname,__FILE__);
-            */
-            return NULL;
-        }
+    errno_t err = fopen_s(&fp, pathname, "r");
+    if (err) {
+        /*
+        warn("readImgLabels(%s) [%s]: err fopen_s, returning NULL",pathname,__FILE__);
+        */
+        return NULL;
+    }
     while (fgets(buf, 256, fp) != NULL) {
-        if (buf[0] == '#')  continue;
-        if (sscanf(buf, 256, "%s %f %f", name, &x, &y) == 3) {
+        if (buf[0] == '#') 
+            continue;
+        if (sscanf_s(buf, "%s %f %f", &name[0], 80, &x, &y) == 3) {
             img_label = (img_label_t *)calloc(1, sizeof(img_label_t));
             img_label->name = _strdup(name);
             img_label->x = x;

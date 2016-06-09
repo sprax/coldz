@@ -91,9 +91,7 @@ manCorTri(ppf dcT, ppf dfT, ppf dwT, ppf scA, ppf scB, ppf sgA, ppf sgB
         gp[2] = FcBLU;
     }
     if (Options & O_VERB)
-        showF(sRGB[0], dX, dY, dW, dH,
-            3, gA, "sRGB-A",
-            0, Zoom);
+        showF(sRGB[0], dX, dY, dW, dH, 3, gA, "sRGB-A", Zoom, 0);
 
     gB = (pGlst)calloc(1, sizeof(Glst));
     gp = gB->rgba = &sB[0]; gB->glfn = &drawTris;
@@ -109,7 +107,7 @@ manCorTri(ppf dcT, ppf dfT, ppf dwT, ppf scA, ppf scB, ppf sgA, ppf sgB
         gp[2] = FcMAG;
     }
     if (Options & O_VERB)
-        showF(sRGB[1], dX, dY, dW, dH, 3, gB, "sRGB-B", 0, Zoom);
+        showF(sRGB[1], dX, dY, dW, dH, 3, gB, "sRGB-B", Zoom, 0);
 
     gC = (pGlst)calloc(1, sizeof(Glst));
     gp = gC->rgba = &sC[0]; gC->glfn = &drawTris;
@@ -140,7 +138,7 @@ manCorTri(ppf dcT, ppf dfT, ppf dwT, ppf scA, ppf scB, ppf sgA, ppf sgB
 
     if (Options & O_VERB) {
         ixyFwd2(dcT, dwT, scA, scB, baX, baY, dX, dY, dW, dH, sX, sY, sW, sH, pvim, trs, clr, inFill, 127.5);
-        showF(dcT, dX, dY, dW, dH, 3, gC, "ixyFwd2  OPT-FLOW  0.5", 0, Zoom);
+        showF(dcT, dX, dY, dW, dH, 3, gC, "ixyFwd2  OPT-FLOW  0.5", Zoom, 0);
     }
 
     if (baX && baY) {
