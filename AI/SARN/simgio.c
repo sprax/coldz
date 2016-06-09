@@ -10,7 +10,7 @@ read_simage(filename,image)
 char *filename;
 SIMAGE *image;
 {
-   FILE *fopen(),*stream;
+   FILE *stream;
 
    if ((stream=fopen(filename,"r")) == NULL)
       return(0);

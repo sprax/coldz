@@ -8,10 +8,13 @@
 
 int read_fimage(char *filename, FIMAGE *image)
 {
-   FILE *fopen(),*stream;
+   FILE *stream;
 
-   if ((stream=fopen(filename,"r")) == NULL)
-      return(0);
+   if ((stream = fopen(filename, "r")) == NULL) {
+       fprintf(stderr, "read_fimage: Couldn't open filter file %s\n", filename);
+       return(0);
+   }
+
    read_fimgstr(stream,image);
    fclose(stream);
    return(1);

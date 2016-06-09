@@ -52,18 +52,18 @@ long 	winid = winget();
   if (areaA < MINAREA) { wrn("inCrsTetSwapPersp: areaA %.2f too small",areaA); return; }
 
   warpRecFromTetPerspRgb(wwD->dsrc,mB->rgbi,bX,bY,bW,bH,sD,mB->tetB[nt]);
-  sprintf(Gstr,"%dB PERSP",nt); showF(wwD->dsrc,bX,bY,bW,bH,sD->d,NULL,Gstr, Zoom, 5);
+  sprintf_s(Gstr,"%dB PERSP",nt); showF(wwD->dsrc,bX,bY,bW,bH,sD->d,NULL,Gstr, Zoom, 5);
   warpTetFromRecPerspRgb(mA->rgbi,wwD->dsrc,bX,bX,bW,bH,sD,mB->tetA[nt]);
-  sprintf(Gstr,"%dA<-B I-PERSP",nt); showFm(mA->rgbi,sD,Gstr, Zoom, 7);
+  sprintf_s(Gstr,"%dA<-B I-PERSP",nt); showFm(mA->rgbi,sD,Gstr, Zoom, 7);
 
 #if 0
       warpRecFrTetBilinRgb(wwD->dsrc,mB->rgbi,0,0,dW,dH,sD,mB->tetB[nt]);
-      sprintf(Gstr,"%d BILIN CRS",nB); showF(wwD->dsrc,0,0,dW,dH,sD->d,NULL,Gstr, Zoom, 7);
+      sprintf_s(Gstr,"%d BILIN CRS",nB); showF(wwD->dsrc,0,0,dW,dH,sD->d,NULL,Gstr, Zoom, 7);
       prn("inCrsTetSwapPersp: did mB->rgbi (nB == %d) show?", nB);
 
       warpRecFrTetBilinAcc(wwD,dW,dH,mB->tetA[nt],mB->tetB[nt],nB);
       warpRecFrTetBilinGry(FeG[1], mB->gray,     0,0,dW,dH,fD,mB->tetB[nt]);
-      /*sprintf(Gstr,"%d BILIN CRS",nB); showF(FeG[1],0,0,dW,dH,1,    NULL,Gstr, Zoom, 7);*/
+      /*sprintf_s(Gstr,"%d BILIN CRS",nB); showF(FeG[1],0,0,dW,dH,1,    NULL,Gstr, Zoom, 7);*/
 
       if (Devopts & O_GRAY)
         prn("inCrsTetSwapPersp: SKIPPING OPTICAL FLOW -- GEOMETRIC WARPING ONLY!");

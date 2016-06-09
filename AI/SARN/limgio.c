@@ -10,7 +10,7 @@ read_limage(filename,image)
 char *filename;
 LIMAGE *image;
 {
-   FILE *fopen(),*stream;
+   FILE *stream;
 
    if ((stream=fopen(filename,"r")) == NULL)
       return(0);

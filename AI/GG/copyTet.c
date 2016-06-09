@@ -97,7 +97,7 @@ int     sP  = sM + 1, aP = aM + 1;
     }
   }
   /************************************************
-  sprintf(str,"%d tetWarp ACC",sN);
+  sprintf_s(str,"%d tetWarp ACC",sN);
   showF(gryP[2], 0, 0, dW, dH,1,NULL,str,5);
   { double  stds[10];
     shoStats4( stds,     flow->wts,0,0,dW,dH,"I-CORRES stats on WTS");

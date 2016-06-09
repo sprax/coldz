@@ -364,8 +364,8 @@ float	dx, dy, dist, fxy[2];
   getsize(&wd,&ht);     wd -= 1, ht -= 1;
   xBn  = (getvaluator(MOUSEX) - orgX);
   yBn  = (getvaluator(MOUSEY) - orgY);
-  xBo  = tetB[nvtx][0];
-  yBo  = tetB[nvtx][1];
+  xBo  = (long)tetB[nvtx][0];
+  yBo  = (long)tetB[nvtx][1];
   dx   = (xBn - xBo);
   dy   = (yBn - yBo);
   dist = dx*dx + dy*dy;
@@ -384,9 +384,9 @@ float	dx, dy, dist, fxy[2];
       color(BLACK);
       drawExCtr(xBo, yBo, rv0);
       color(RED);
-      drawExCtr(tetA[nvtx][0], tetA[nvtx][1], rv0);   /* redraw X from A */
+      drawExCtr((long)tetA[nvtx][0], (long)tetA[nvtx][1], (long)rv0);   /* redraw X from A */
       color(GREEN);
-      drawExCtr(FloB[nvtx][0], FloB[nvtx][1], rv0);   /* redraw orig flow X */
+      drawExCtr((long)FloB[nvtx][0], (long)FloB[nvtx][1], (long)rv0);   /* redraw orig flow X */
       drawExCtr(xBn, yBn, rv0);
 
       color(BLACK);
@@ -411,7 +411,8 @@ float	dx, dy, dist, fxy[2];
           bgnline();
           v2f(tetB[0]);
           v2f(tetB[1]);
-          fxy[0] = xBo, fxy[1] = yBo;
+          fxy[0] = (float)xBo;
+          fxy[1] = (float)yBo;
           v2f(fxy);
           endline();
           color(RED);

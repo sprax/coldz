@@ -5,7 +5,7 @@
  NB: Ideally, all compilation herein would depend on which libraries are
  actually available in the environment in which this module is compiled.
  In practice, it depends entirely on macro definitions likely to coincide with
- which libraries are used -- e.g. strdup is not commonly available on any DEC
+ which libraries are used -- e.g. _strdup is not commonly available on any DEC
  machines (VAX or MIPS), though some sites may have it installed in GNU glibc.
  *****************************************************************************/
 #include <stdlib.h>	/* malloc, ... */
@@ -16,7 +16,7 @@
 
 /* ____________________ STRDUP _____________________________________________*/
 #ifdef UN_STRDUP
-char *strdup(const char *src)
+char *_strdup(const char *src)
 {
   size_t size = (size_t)(1 + strlen(src));
   char  *dst = (char *)malloc(size);

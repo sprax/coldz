@@ -35,7 +35,7 @@ get_vqc_header(stream,nsym,dim,xsize,ysize)
 FILE *stream;
 int *nsym,*dim,*xsize,*ysize;
 {
-   fscanf(stream,"nsym=%d  dim=%d  xsize=%d  ysize=%d",nsym,dim,xsize,ysize);
+   fscanf_s(stream,"nsym=%d  dim=%d  xsize=%d  ysize=%d",nsym,dim,xsize,ysize);
 }
 
 get_codebook(stream,codebook,nsym,dim)
@@ -69,7 +69,7 @@ int dim;
   register float *fin;
 
   for (fin=x+dim; x < fin; x++)
-    fscanf(stream,"%f",x);
+    fscanf_s(stream,"%f",x);
 }
 
 put_fcodeword(stream,x,dim) 
@@ -98,7 +98,7 @@ int dim;
   register short *fin;
 
   for (fin=x+dim; x < fin; x++)
-    fscanf(stream,"%f",x);
+    fscanf_s(stream,"%f",x);
 }
 
 put_scodeword(stream,x,dim) 

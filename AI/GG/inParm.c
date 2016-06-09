@@ -299,7 +299,7 @@ int     j, line, tween;
 float   *cp;
 FILE    *fi;
 
-  if (! (fi = fopen(path,"r"))) {
+  if (! (fi = fopen_s(path,"r"))) {
     warn("parmReadXYZ [%s]: can't open %s, returning 0",__FILE__,path);
     return 0;
   }

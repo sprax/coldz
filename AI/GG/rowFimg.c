@@ -22,15 +22,15 @@ IMAGE_HEADER shdr;
 
 
   if (flags & 1) {
-    if (ext != NULL)  sprintf(ipath,"%s.%dx%d.%s",path,sw,sh,ext);
-    else              sprintf(ipath,"%s.%dx%d"   ,path,sw,sh);
+    if (ext != NULL)  sprintf_s(ipath,"%s.%dx%d.%s",path,sw,sh,ext);
+    else              sprintf_s(ipath,"%s.%dx%d"   ,path,sw,sh);
   } else {
-    if (ext != NULL)  sprintf(ipath,"%s.%s",path,ext);
-    else              sprintf(ipath,"%s"   ,path    );
+    if (ext != NULL)  sprintf_s(ipath,"%s.%s",path,ext);
+    else              sprintf_s(ipath,"%s"   ,path    );
   }
 
-  if (! (fp = fopen(ipath,"r"))) {
-    warn("rowReadFimg err: fopen(%s,\"r\")",ipath);
+  if (! (fp = fopen_s(ipath,"r"))) {
+    warn("rowReadFimg err: fopen_s(%s,\"r\")",ipath);
     return 0;
   }
 
@@ -109,15 +109,15 @@ void *pv;
 
   memset((char *)&shdr, 0, sizeof(shdr));
   if (flags & 1) {
-    if (ext != NULL)  sprintf(op,"%s.%dx%d.%s",path,wide,tall,ext);
-    else              sprintf(op,"%s.%dx%d"   ,path,wide,tall);
+    if (ext != NULL)  sprintf_s(op,"%s.%dx%d.%s",path,wide,tall,ext);
+    else              sprintf_s(op,"%s.%dx%d"   ,path,wide,tall);
   } else {
-    if (ext != NULL)  sprintf(op,"%s.%s",path,ext);
-    else              sprintf(op,"%s"   ,path    );
+    if (ext != NULL)  sprintf_s(op,"%s.%s",path,ext);
+    else              sprintf_s(op,"%s"   ,path    );
   }
 
-  if (!(fout = fopen(op,"w"))) {
-    warn("rowWriteFimg: err fopen(%s,\"w\")",op);
+  if (!(fout = fopen_s(op,"w"))) {
+    warn("rowWriteFimg: err fopen_s(%s,\"w\")",op);
     sz = 0;
   }
   /* else prn("rowWriteFimg: opened %s for output of %lu bytes",op,sz); */

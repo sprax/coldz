@@ -51,7 +51,7 @@ long	wid = winget();
     for (j = 0; j < numTri; j++) {
       copyTriFltRgbi(wwD->dsrc,mA->rgbi,mB->triA[j]);
     }
-    sprintf(Gstr,"inFloTriCut %d",numTri);
+    sprintf_s(Gstr,"inFloTriCut %d",numTri);
     showFm(wwD->dsrc,sD,Gstr, 1.0, 5);
   }
 
@@ -65,9 +65,9 @@ long	wid = winget();
     **/
   }
   if (Devopts & O_WARN) {
-    sprintf(Gstr,"inFloTriCut, nt:%d",numTri);
+    sprintf_s(Gstr,"inFloTriCut, nt:%d",numTri);
     showFm(FeG[1],fD,Gstr, 1.0, 5);
-    sprintf(Gstr,"inFloTriCut, nB:%d",nB);
+    sprintf_s(Gstr,"inFloTriCut, nB:%d",nB);
     showFm(FeG[2],fD,Gstr, 1.0, 7);
   }
   rowFlowBac(FeX[1],FeY[1],FeG[0],FeG[2],FeG[1],sX,sY,sW,sH,fX,fY,fW,fH,PyrTop,PyrBot,0);

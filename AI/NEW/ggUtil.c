@@ -87,7 +87,7 @@ FILE *ggLogH ( int *dims, char *dir, int pvim, FILE *pFiles
   fprintf(stderr,"Output dir: %s\t\tdW,dH: %d x %d,      qW,qH: %d x %d\n"
          ,dir,dW,dH,qW,qH);
   sprintf_s(ss,"%s/Log",dir);
-  if ( ! (fLog = fopen(ss,"a")))
+  if ( ! (fLog = fopen_s(ss,"a")))
     die("Error opening %s for appending\n",ss);
   fprintf(fLog,"%s\n",sLog);
 #endif

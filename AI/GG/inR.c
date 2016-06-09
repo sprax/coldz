@@ -182,7 +182,7 @@ wrn("AFTER *STRUCT ASSGN: fXYWH:  %d  %d    %u  %u", fD->x,fD->y,fD->w,fD->h);
     if (Devopts & O_WARN) {
       dd = Zoom; Zoom = 2.0;
       for (j = 0; j < NumSrc; j++) {
-        sprintf(path, "srcU.%s.%d.%d.%u.%u",iname[j],sD->x,sD->y,sD->w,sD->h);
+        sprintf_s(path, "srcU.%s.%d.%d.%u.%u",iname[j],sD->x,sD->y,sD->w,sD->h);
         showItWithDots(srcU[j],&dLbl[j],sD,path,NULL,&pGs[j]);
       }
       Zoom = dd;
@@ -190,7 +190,7 @@ wrn("AFTER *STRUCT ASSGN: fXYWH:  %d  %d    %u  %u", fD->x,fD->y,fD->w,fD->h);
 #endif
 
     if (NumSrc == 2) {
-      sprintf(path,"%s+%s.tris",ArgStr[1],ArgStr[2]);
+      sprintf_s(path,"%s+%s.tris",ArgStr[1],ArgStr[2]);
       numTri = jkReadTriPairs(triP,MAXPRS,path,iH-1,MJ_INVTY);
       /*
       prn("jkReadTriPairs(%s) found this many TRIANGLES %d",ArgStr[NumSrc+1],numTri);
@@ -200,7 +200,7 @@ wrn("AFTER *STRUCT ASSGN: fXYWH:  %d  %d    %u  %u", fD->x,fD->y,fD->w,fD->h);
     if ((Options & O_VERB) && (Devopts & O_WARN)) {
       dd = Zoom; Zoom = 1.0;
       for (j = 0; j < NumSrc; j++) {
-        sprintf(path, "inpU.%s.%dx%d",iname[j],iW,iH);
+        sprintf_s(path, "inpU.%s.%dx%d",iname[j],iW,iH);
         showItWithTri(inpU[j],&sLbl[j],iD,path,NULL,&pGi[j],triP,numTri,(j%2));
       }
       Zoom = (flt)dd;
@@ -210,7 +210,7 @@ wrn("AFTER *STRUCT ASSGN: fXYWH:  %d  %d    %u  %u", fD->x,fD->y,fD->w,fD->h);
     if ((Options & O_VERB) && (Devopts & O_WARN)) {
       dd = Zoom; Zoom = 2.0;
       for (j = 0; j < NumSrc; j++) {
-        sprintf(path, "srcU.%s.%dx%d TRF",iname[j],sW,sH);
+        sprintf_s(path, "srcU.%s.%dx%d TRF",iname[j],sW,sH);
         showItWithTri(srcU[j],&sLbl[j],sD,path,NULL,&pGs[j],triP,numTri,(j%2));
       }
       Zoom = (flt)dd;
@@ -257,7 +257,7 @@ wrn("AFTER *STRUCT ASSGN: fXYWH:  %d  %d    %u  %u", fD->x,fD->y,fD->w,fD->h);
       sRGB[j] =  rowMalFlt(sX*3,sY,sW*3,sH);
       rgbGrayUnc3(sRGB[j],srcG[j],srcU[j],sX,sY,sX,sY,sW,sH,sX,sY);
       if (Options & O_LBLS) {   /** -l **/
-        sprintf(path,"sRGB.%s.%d.%d.%u.%u",iname[j],sX,sY,sW,sH);
+        sprintf_s(path,"sRGB.%s.%d.%d.%u.%u",iname[j],sX,sY,sW,sH);
         rgbWriteSGIn( sRGB[j],sX,sY,sW,sH,path);
         /*showF(      sRGB[j],sX,sY,sW,sH,3,NULL,path,0, Zoom); */
       }
@@ -284,7 +284,7 @@ wrn("AFTER *STRUCT ASSGN: fXYWH:  %d  %d    %u  %u", fD->x,fD->y,fD->w,fD->h);
 if (NumSrc == 12)  {
   Options &= ~O_BACK;
   for (j = 1; j < 9; j++) {        /* Fwd should be optional, too */
-    sprintf(path,"%s-%s",mob[0]->name,mob[j]->name);
+    sprintf_s(path,"%s-%s",mob[0]->name,mob[j]->name);
     if (! (Options & O_BACK) || Options & O_FWRD || Devopts & O_BOTH || Devopts & O_EXTR) {
       if (Options & O_READ) {
         readFlows(&fvX[j],&fvY[j],fX,fY,fW,fH,0,path,'F',1);
@@ -320,7 +320,7 @@ if (NumSrc == 12)  {
     }
   }
   j = 12;
-  sprintf(path,"%s-%s",mob[3]->name,mob[11]->name);
+  sprintf_s(path,"%s-%s",mob[3]->name,mob[11]->name);
   prn("reading %s.F[XY] for flow %d", path, j);
   rowReadFlt(&fvX[j],fX,fY,fW,fH,0,NULL,path,".FX",1);
   rowReadFlt(&fvY[j],fX,fY,fW,fH,0,NULL,path,".FY",1);
@@ -328,7 +328,7 @@ if (NumSrc == 12)  {
     die("inR.c: inReadAll: ERROR reading %s", path);
 
   j = 13;
-  sprintf(path,"%s-%s",mob[3]->name,mob[10]->name);
+  sprintf_s(path,"%s-%s",mob[3]->name,mob[10]->name);
   prn("reading %s.F[XY] for flow %d", path, j);
   rowReadFlt(&fvX[j],fX,fY,fW,fH,0,NULL,path,".FX",1);
   rowReadFlt(&fvY[j],fX,fY,fW,fH,0,NULL,path,".FY",1);
@@ -336,7 +336,7 @@ if (NumSrc == 12)  {
     die("inR.c: inReadAll: ERROR reading %s", path);
 
   j = 14;
-  sprintf(path,"%s-%s",mob[3]->name,mob[9]->name);
+  sprintf_s(path,"%s-%s",mob[3]->name,mob[9]->name);
   prn("reading %s.F[XY] for flow %d", path, j);
   rowReadFlt(&fvX[j],fX,fY,fW,fH,0,NULL,path,".FX",1);
   rowReadFlt(&fvY[j],fX,fY,fW,fH,0,NULL,path,".FY",1);
@@ -344,7 +344,7 @@ if (NumSrc == 12)  {
     die("inR.c: inReadAll: ERROR reading %s", path);
 
   j = 15;
-  sprintf(path,"%s-%s",mob[3]->name,mob[4]->name);
+  sprintf_s(path,"%s-%s",mob[3]->name,mob[4]->name);
   prn("reading %s.F[XY] for flow %d", path, j);
   rowReadFlt(&fvX[j],fX,fY,fW,fH,0,NULL,path,".FX",1);
   rowReadFlt(&fvY[j],fX,fY,fW,fH,0,NULL,path,".FY",1);
@@ -371,7 +371,7 @@ if (NumSrc == 12)  {
 
 
   for (j = 1; j < NumSrc; j++) {	/* Fwd should be optional, too */
-    sprintf(path,"%s-%s",mob[0]->name,mob[j]->name);
+    sprintf_s(path,"%s-%s",mob[0]->name,mob[j]->name);
     if (! (Options & O_BACK) || Options & O_FWRD || Devopts & O_BOTH || Devopts & O_EXTR) {
       if (Options & O_READ) { 
         readFlows(&fvX[j],&fvY[j],fX,fY,fW,fH,0,path,'F',1);
@@ -429,9 +429,9 @@ if (NumSrc == 12)  {
   if (Devopts & O_BQDR) {       /* -Q */
     warn("Outputting %d src & pre-warped images as src|pre.[A-D]",NumSrc);
     for (j = 0; j < NumSrc; j++) {
-      sprintf(path,"%s.%c","pre",('A'+j));
+      sprintf_s(path,"%s.%c","pre",('A'+j));
       rgbWriteSGIn(sPre[j],dX,dY,dW,dH,path);
-      sprintf(path,"%s.%c","src",('A'+j));
+      sprintf_s(path,"%s.%c","src",('A'+j));
       rgbWriteSGIn(sRGB[j],dX,dY,dW,dH,path);
     }
   }

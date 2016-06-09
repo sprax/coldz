@@ -7,7 +7,6 @@
 #include	"inExtern.h"
 #include	"ggParse.h"
 #include	"jk.h"
-#define SLEN 512
 
 extern double CropYF;
 
@@ -31,15 +30,15 @@ jkParse(int argc, char **argv, char **envp)
     if (z < NumSrc)
         die("jkParse: Need at least %d string args!", NumSrc);
     if (z < NumSrc + 2) {
-        sprintf(dirname, "%s./%s", ProgName, ArgStr[1]);
+        sprintf_s(dirname, SLEN, "%s./%s", ProgName, ArgStr[1]);
         for (j = 2; j <= NumSrc; j++) {
-            strcat(dirname, ".");
-            strcat(dirname, ArgStr[j]);
+            strcat_s(dirname, SLEN, ".");
+            strcat_s(dirname, SLEN, ArgStr[j]);
         }
-        ArgStr[NumSrc + 2] = strdup(dirname);
+        ArgStr[NumSrc + 2] = _strdup(dirname);
     }
-    sprintf(dirname, "%s+%s.tris", ArgStr[1], ArgStr[2]);
-    ArgStr[NumSrc + 1] = strdup(dirname);
+    sprintf_s(dirname, SLEN, "%s+%s.tris", ArgStr[1], ArgStr[2]);
+    ArgStr[NumSrc + 1] = _strdup(dirname);
 
     if (z < NumSrc + 1)  OutIFF = FF_SGI;
     else if ((q = FFfromString(ArgStr[NumSrc + 1])) == FF_UNKNOWN)
@@ -65,7 +64,7 @@ jkParse(int argc, char **argv, char **envp)
       if (z > 3)  Ztweens = ArgInt[3];
     *****/
     z = (int)ArgDbl[0];
-    if (z > 0)      MvZoom = ArgDbl[1];
+    if (z > 0)      MvZoom = (flt)ArgDbl[1];
     if (z > 1)      CropYF = ArgDbl[2];
     if (z > 2)      TrsBeg = ArgDbl[3];
     if (z > 3)      TrsEnd = ArgDbl[4];
@@ -87,23 +86,24 @@ FILE *jkLog(int argc, char **argv, char **argStr, int ntweens, int pvim
 
     reMkdir(dirname, 0775, 0);
     /* fprintf(stderr,"Output dir: %s\t dW,dH: %d x %d\n",dirname,dW,dH); */
-    sprintf(ss, "%s/Log", dirname);
-    if (!(fLog = fopen(ss, "a")))
+    sprintf_s(ss, SLEN, "%s/Log", dirname);
+    errno_t err = fopen_s(&fLog, ss, "a");
+    if (err)
         die("Error opening %s for appending\n", ss);
 
-    sprintf(ss, "%s", argv[0]);
+    sprintf_s(ss, SLEN, "%s", argv[0]);
     for (j = 1; j < argc; j++) {
-        strcat(ss, " ");
-        strcat(ss, argv[j]);
+        strcat_s(ss, SLEN, " ");
+        strcat_s(ss, SLEN, argv[j]);
     }
     fprintf(fLog, "%s\n", ss);
 
-    sprintf(sLog, "%s ", ProgName);
+    sprintf_s(sLog, SLEN, "%s ", ProgName);
     for (j = 1; j <= NumSrc; j++) {
-        strcat(sLog, argStr[j]);
-        strcat(sLog, " ");
+        strcat_s(sLog, SLEN, argStr[j]);
+        strcat_s(sLog, SLEN, " ");
     }
-    sprintf(ss, "\tSYS:%s  PVI:%s  DOM:%s  OFF:%s "
+    sprintf_s(ss, SLEN, "\tSYS:%s  PVI:%s  DOM:%s  OFF:%s "
 #if     defined(SGI)
         , "SGI"
 #elif   defined(SUN)
@@ -116,9 +116,9 @@ FILE *jkLog(int argc, char **argv, char **argStr, int ntweens, int pvim
         , pvimStr(pvim)
         , (Options & O_UNCH ? "unchr" : "float")
         , "SGI");      /* @ */
-    strcat(sLog, ss);
-    sprintf(ss, "%d %.3f %.3f ", ntweens, trsBeg, trsEnd);
-    strcat(sLog, ss);
+    strcat_s(sLog, SLEN, ss);
+    sprintf_s(ss, SLEN, "%d %.3f %.3f ", ntweens, trsBeg, trsEnd);
+    strcat_s(sLog, SLEN, ss);
     /**
     fprintf(stderr,"%s\n",sLog);
     fflush(stderr);

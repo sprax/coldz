@@ -62,7 +62,6 @@ extern void markSub2       (void *v, int device, int flags);
 extern void moveSub2       (void *v, int device, int flags);
 extern void winEditMenu2   (void *v, int device, int flags);
 
-
 #endif	/*winDraw_h__*/
 
 

@@ -92,7 +92,7 @@ long    winid = winget();
   cW = tX - cX,  cH = tY - cY;
   if (! flags) rgbNwtsFlt(wwD->dsrc,wwD->wts,cX,cY,cW,cH,0.05);
   /* rgbPlugFlt(dst,wts,cX,cY,cW,cH,0.05,127.5); */
-  sprintf(Gstr,"%d %s BOX",numTet,(itsA ? "A<-B":"B<-A"));
+  sprintf_s(Gstr,"%d %s BOX",numTet,(itsA ? "A<-B":"B<-A"));
   showF(wwD->dsrc,sX,sY,sW,sH,sD->d,NULL,Gstr,Zoom,9);
   winset(winid);
 }
@@ -143,7 +143,7 @@ long    winid = winget();
     rgbNwtsFlt(wwD->dsrc,wwD->wts,aX,aY,aW,aH,0.05);
     /* rgbPlugFlt(dst,wts,aX,aY,aW,aH,0.05,127.5); */
   }
-  sprintf(Gstr,"%d A<-B BOX",nt); showF(wwD->dsrc,aX,aY,aW,aH,sD->d,NULL,Gstr, Zoom, 5);
+  sprintf_s(Gstr,"%d A<-B BOX",nt); showF(wwD->dsrc,aX,aY,aW,aH,sD->d,NULL,Gstr, Zoom, 5);
 
   rowZeroF(wwD->dsrc,sX*3,sY,sW*3,sH);
   rowZeroF(wwD->wts, sX  ,sY,sW  ,sH);
@@ -154,7 +154,7 @@ long    winid = winget();
     rgbNwtsFlt(wwD->dsrc,wwD->wts,bX,bY,bW,bH,0.05);
     /* rgbPlugFlt(dst,wts,bX,bY,bW,bH,0.05,127.5); */
   }
-  sprintf(Gstr,"%d B<-A BOX",nt); showF(wwD->dsrc,bX,bY,bW,bH,sD->d,NULL,Gstr, Zoom, 7);
+  sprintf_s(Gstr,"%d B<-A BOX",nt); showF(wwD->dsrc,bX,bY,bW,bH,sD->d,NULL,Gstr, Zoom, 7);
   winset(winid);
 }
 #endif
@@ -190,23 +190,23 @@ long 	winid = winget();
   
   rowZeroF(wwD->dsrc,sX*3,sY,sW*3,sH);
   warpTetFrTetBilinRgb (wwD->dsrc,mB->rgbi,sD,mB->tetA[nt],mB->tetB[nt]);
-  sprintf(Gstr,"%d A<-B",nt); showF(wwD->dsrc,aX,aY,aW,aH,sD->d,NULL,Gstr, Zoom, 5);
+  sprintf_s(Gstr,"%d A<-B",nt); showF(wwD->dsrc,aX,aY,aW,aH,sD->d,NULL,Gstr, Zoom, 5);
 
   rowZeroF(wwD->dsrc,sX*3,sY,sW*3,sH);
   warpTetFrTetBilinRgb (wwD->dsrc,mA->rgbi,sD,mB->tetB[nt],mB->tetA[nt]);
-  sprintf(Gstr,"%d B<-A",nt); showF(wwD->dsrc,bX,bY,bW,bH,sD->d,NULL,Gstr, Zoom, 7);
+  sprintf_s(Gstr,"%d B<-A",nt); showF(wwD->dsrc,bX,bY,bW,bH,sD->d,NULL,Gstr, Zoom, 7);
 
 #if 0
   warpTetFromRecPerspRgb(mA->rgbi,wwD->dsrc,bX,bX,bW,bH,sD,mB->tetA[nt]);
-  sprintf(Gstr,"%dA<-B I-PERSP",nt); showFm(mA->rgbi,sD,Gstr, Zoom, 7);
+  sprintf_s(Gstr,"%dA<-B I-PERSP",nt); showFm(mA->rgbi,sD,Gstr, Zoom, 7);
 
       warpRecFrTetBilinRgb(wwD->dsrc,mB->rgbi,0,0,dW,dH,sD,mB->tetB[nt]);
-      sprintf(Gstr,"%d BILIN CRS",nB); showF(wwD->dsrc,0,0,dW,dH,sD->d,NULL,Gstr, Zoom, 7);
+      sprintf_s(Gstr,"%d BILIN CRS",nB); showF(wwD->dsrc,0,0,dW,dH,sD->d,NULL,Gstr, Zoom, 7);
       prn("inCrsTetSwapBilin: did mB->rgbi (nB == %d) show?", nB);
 
       warpRecFrTetBilinAcc(wwD,dW,dH,mB->tetA[nt],mB->tetB[nt],nB);
       warpRecFrTetBilinGry(FeG[1], mB->gray,     0,0,dW,dH,fD,mB->tetB[nt]);
-      /*sprintf(Gstr,"%d BILIN CRS",nB); showF(FeG[1],0,0,dW,dH,1,    NULL,Gstr, Zoom, 7);*/
+      /*sprintf_s(Gstr,"%d BILIN CRS",nB); showF(FeG[1],0,0,dW,dH,1,    NULL,Gstr, Zoom, 7);*/
 
       if (Devopts & O_GRAY)
         prn("inCrsTetSwapBilin: SKIPPING OPTICAL FLOW -- GEOMETRIC WARPING ONLY!");

@@ -13,7 +13,6 @@
 getpyrfilters(char *filename, FILTER *rf, FILTER *ef)
 {
    FILE *stream;
-   int i;
 
    if ((stream=fopen(filename,"r")) == NULL) {
       fprintf(stderr,"getpyrfilters: Couldn't open filter file %s\n",filename);
@@ -103,10 +102,10 @@ read_1d_filter(FILT1D *f, FILE *stream)
    int i;
    double val,scale;
 
-   fscanf(stream,"%d:%d %lf",&(f->l),&(f->r),&scale);
+   fscanf_s(stream,"%d:%d %lf",&(f->l),&(f->r),&scale);
    f->k = alloc_fvector(f->l,f->r);
    for (i=f->l; i <= f->r; i++) {
-     fscanf(stream,"%lf",&val);
+     fscanf_s(stream,"%lf",&val);
      f->k[i] = (float) (val/scale);
    }
 }
@@ -119,10 +118,10 @@ read_1d_sym_filter(FILTER *f, FILE *stream)
    int ntaps,i,itap;
    double val,scale;
 
-   fscanf(stream,"%d %lf",&ntaps,&scale);
+   fscanf_s(stream,"%d %lf",&ntaps,&scale);
    p = (float *) malloc(ntaps*sizeof(*p));
    for (i=0; i < ntaps; i++) {
-     fscanf(stream,"%d %lf",&itap,&val);
+     fscanf_s(stream,"%d %lf",&itap,&val);
      p[itap-1] = (float) (val/scale);
    }
    f->k = p + (ntaps-1)/2;
@@ -136,11 +135,11 @@ read_2d_filter(FILT2D *f, FILE *stream)
    int i,j;
    double val,scale;
 
-   fscanf(stream,"%d:%d %d:%d %lf",&(f->l),&(f->r),&(f->b),&(f->t),&scale);
+   fscanf_s(stream,"%d:%d %d:%d %lf",&(f->l),&(f->r),&(f->b),&(f->t),&scale);
    f->k = alloc_farray(f->b,f->t,f->l,f->r);
    for (j=f->b; j <= f->t; j++)
      for (i=f->l; i <= f->r; i++) {
-       fscanf(stream,"%lf",&val);
+       fscanf_s(stream,"%lf",&val);
        f->k[j][i] = (float) (val/scale);
      }
 }

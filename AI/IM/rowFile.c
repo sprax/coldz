@@ -40,33 +40,33 @@ rowReadFlt(ppf *inp, int iX, int iY, unt iW, unt iH
         else              sprintf_s(ipath, 256, "%s", path);
     }
 
-    errno_t err = fopen(ipath, "r");
+    errno_t err = fopen_s(&fp, ipath, "r");
     if (err) {
-    warn("rowReadFlt err: fopen(%s,\"r\")", ipath);
-    return 0;
-  }
+        warn("rowReadFlt err: fopen_s(%s,\"r\")", ipath);
+        return 0;
+    }
 
-  /*
-    prn("rowReadFlt: opened %s for input of %lu bytes"
-          ,ipath,iW*iH*sizeof(flt)+hdrBytes);
-  */
+    /*
+      prn("rowReadFlt: opened %s for input of %lu bytes"
+            ,ipath,iW*iH*sizeof(flt)+hdrBytes);
+    */
 
-  if (*inp == NULL)
-      row = rowMalFlt(iX, iY, iW, iH);
-  else
-      row = rowRalFlt(*inp, iX, iY, iW, iH);
+    if (*inp == NULL)
+        row = rowMalFlt(iX, iY, iW, iH);
+    else
+        row = rowRalFlt(*inp, iX, iY, iW, iH);
 
-  if (hdrBytes > 0 && 1 != fread(header, hdrBytes, 1, fp))
-      warn("rowReadFlt err: fread header, %lu bytes", hdrBytes);
+    if (hdrBytes > 0 && 1 != fread(header, hdrBytes, 1, fp))
+        warn("rowReadFlt err: fread header, %lu bytes", hdrBytes);
 
-  if (count != fread(row[iY] + iX, sizeof(flt), count, fp)) {
-      warn("rowReadFlt err: fread %lu bytes", count * sizeof(flt));
-      rowKillFlt(row, iX, iY);
-      return 0;
-  }
-  fclose(fp);
-  *inp = row;	/* So inp only changes on successful read. */
-  return count;
+    if (count != fread(row[iY] + iX, sizeof(flt), count, fp)) {
+        warn("rowReadFlt err: fread %lu bytes", count * sizeof(flt));
+        rowKillFlt(row, iX, iY);
+        return 0;
+    }
+    fclose(fp);
+    *inp = row;	/* So inp only changes on successful read. */
+    return count;
 }
 
 
@@ -81,16 +81,17 @@ rowWriteFlt(ppf src, int xi, int yi, unt wide, unt tall
     size_t sz = rowBytes*tall + hdrBytes;
 
     if (flags) {
-        if (ext != NULL)  sprintf_s(op, "%s.%dx%d.%s", path, wide, tall, ext);
-        else              sprintf_s(op, "%s.%dx%d", path, wide, tall);
+        if (ext != NULL)  sprintf_s(op, SLEN, "%s.%dx%d.%s", path, wide, tall, ext);
+        else              sprintf_s(op, SLEN, "%s.%dx%d", path, wide, tall);
     }
     else {
-        if (ext != NULL)  sprintf_s(op, "%s.%s", path, ext);
-        else              sprintf_s(op, "%s", path);
+        if (ext != NULL)  sprintf_s(op, SLEN, "%s.%s", path, ext);
+        else              sprintf_s(op, SLEN, "%s", path);
     }
 
-    if (!(fout = fopen(op, "w"))) {
-        warn("rowWriteFlt: err fopen(%s,\"w\")", op);
+    errno_t err = fopen_s(&fout, op, "w");
+    if (err) {
+        warn("rowWriteFlt: err fopen_s(%s,\"w\")", op);
         return 0;
     }
 
@@ -125,8 +126,8 @@ void *rowRead(int iX, int iY, unt iW, unt iH
     void **row = NULL;
     size_t count = iW*iH;
 
-    if (!(fp = fopen(path, "r")))
-        warn("rowRead err: fopen(%s,\"r\")", path);
+    if (!(fp = fopen_s(path, "r")))
+        warn("rowRead err: fopen_s(%s,\"r\")", path);
     else {
         row = rowMalVoid(iX, iY, iW, iH, eltSize);
         if (fseek(fp, hdrBytes, SEEK_SET) == -1 ||
@@ -158,7 +159,7 @@ void rowWrite(ppu src, int xi, int yi, unt wide, unt tall
     strcat_s(op, SLEN, ox);
     errno_t err = fopen_s(&fout, op, "w");
     if (err) {
-        die("rowWrite err: fopen(%s,\"w\")\n", op);
+        die("rowWrite err: fopen_s(%s,\"w\")\n", op);
     }
     WQQ3("rowWrite: opened %s for output of %lu bytes.\n", op, rowBytes*tall + hdrBytes);
     if (hdrBytes > 0) {
@@ -179,9 +180,9 @@ unc **rowReadUnc(const char *path, unt wide, unt tall, unt hdrBytes)
     ppu row;
     size_t count = wide*tall;
 
-    errno_t err = fopen_s(&fp, path, "r");    
+    errno_t err = fopen_s(&fp, path, "r");
     if (err) {
-        warn("rowRead err: fopen(%s,\"r\")", path);
+        warn("rowRead err: fopen_s(%s,\"r\")", path);
     }
     else {
         row = rowMalUnc(0, 0, wide, tall);
@@ -203,8 +204,8 @@ MemHdr *MemHdrRead(const char *path, unt wide, unt tall
     MemHdr *mh;
     size_t rowBytes = (size_t)wide*tall*eltsize;
 
-    if (!(fp = fopen(path, "r")))
-        warn("rowRead err: fopen(%s,\"r\")", path);
+    if (!(fp = fopen_s(path, "r")))
+        warn("rowRead err: fopen_s(%s,\"r\")", path);
     else {
         callocAss(mh, MemHdr, 1);
         if (hdrBytes > 0)
@@ -241,7 +242,7 @@ puc GetGrayRaw()
     puc gip8 = (puc)NULL;
     size_t count, nread;
     int j, cols, rows;
-    for (path[0] = 0; !path[0] || !(fi = fopen(path, "r")); ) {
+    for (path[0] = 0; !path[0] || !(fi = fopen_s(path, "r")); ) {
         printf("\n  Name of input file?  ");	gets(path);
     }
     printf("Opened %s\n", path);
@@ -273,7 +274,7 @@ size_t count = wide * tall * 3;
 
 /*  path = (char *)Compress_Check(path); */
 
-if (fp = fopen(path, "r")) {
+if (fp = fopen_s(path, "r")) {
     if (*iptr = buffer = (puc)malloc(count * sizeof(unc)))
         if (count == fread(buffer, sizeof(unc), count, fp))
             stat = 1;
@@ -287,7 +288,7 @@ char *path; int *wide, *tall;
 {   puc LoadImageRGBB();
 FILE *fp;
 puc  rgbi = NULL;
-if (fp = fopen(path, "r")) {
+if (fp = fopen_s(path, "r")) {
     if (Header2LGet(fp, wide, tall)) {
         if ((rgbi = LoadImageRGBB(fp, *wide, *tall)) == NULL)
             fprintf(stderr, "LoadImageRGBB failed\n");
@@ -295,7 +296,7 @@ if (fp = fopen(path, "r")) {
     else fprintf(stderr, "Header2LGet failed\n");
     fclose(fp);
 }
-else printf("fopen failed\n");
+else printf("fopen_s failed\n");
 return(rgbi);
 }
 
@@ -328,7 +329,7 @@ size_t nread, count = 2;
 long header[2];
 
 printf("LoadImagesDave: %s, ", path);
-if (!(fp = fopen(path, "r"))) {
+if (!(fp = fopen_s(path, "r"))) {
     printf("Failed to open for reading.\n");
     return(status);
 }
@@ -339,7 +340,7 @@ if (nread != count || wide > *maxw || tall > *maxt) {
     printf("INVALID nread,wide,tall = %d %d %d\n", nread, wide, tall);
     printf("Assuming ASCII header of format \" %%d %%d\"\n");
     rewind(fp);
-    nread = (size_t)fscanf(fp, "%ld %ld\n", &wide, &tall);
+    nread = (size_t)fscanf_s(fp, "%ld %ld\n", &wide, &tall);
 }
 if (nread != count || wide > *maxw || tall > *maxt) {
     printf("INVALID nread,wide,tall = %d %d %d\n", nread, wide, tall);
@@ -401,7 +402,7 @@ char *path; int *maxw, *maxt;
 size_t pixels;
 puc gip, gbuf = NULL;
 printf("LoadImageRGBBasGray: %s\n", path);
-if (fp = fopen(path, "r")) {
+if (fp = fopen_s(path, "r")) {
     pixels = Header2LGet(fp, maxw, maxt);
     /** printf("  wide, tall, pixels = %d %d %lu\n",*maxw,*maxt,pixels);  **/
     if (gbuf = (puc)malloc(pixels * sizeof(unc))) {
@@ -413,7 +414,7 @@ if (fp = fopen(path, "r")) {
     else fprintf(stderr, "  malloc failed on %lu bytes\n", pixels);
     fclose(fp);
 }
-else fprintf(stderr, "  fopen failed\n");
+else fprintf(stderr, "  fopen_s failed\n");
 return(gbuf);
 }
 
@@ -424,7 +425,7 @@ int LoadImagesDaveG(path, maxw, maxt, cip24, gip8, red8, grn8, blu8)
 char *path; int *maxw, *maxt; puc cip24, gip8, red8, grn8, blu8;
 {   FILE *fp;  int stat = -1;
 fprintf(stderr, "LoadImagesDaveG: %s, ", path);
-if (fp = fopen(path, "r")) {
+if (fp = fopen_s(path, "r")) {
     Header2LGet(fp, maxw, maxt);
     printf("size %d x %d\n", *maxw, *maxt);
     stat = LoadImagesGRGBB(fp, *maxw, *maxt, cip24, gip8, red8, grn8, blu8);
@@ -478,7 +479,7 @@ if (wide < 0 || wide > *maxw || tall < 0 || tall > *maxt) {
     fprintf(stderr, "Header2LGet: INVALID wide,tall = %d %d\n", wide, tall);
     fprintf(stderr, "Assuming ASCII header of format \" %%d %%d\"\n");
     rewind(fp);
-    if (fscanf(fp, "%d %d\n", &wide, &tall) != 2
+    if (fscanf_s(fp, "%d %d\n", &wide, &tall) != 2
         || wide < 0 || wide > *maxw || tall < 0 || tall > *maxt) {
         printf("Bad header; assuming wide,tall = %d, %d:\n", *maxw, *maxt);
         wide = *maxw, tall = *maxt;
@@ -494,7 +495,7 @@ if (wide < 0 || wide > *maxw || tall < 0 || tall > *maxt) {
     fprintf(stderr, "Header2LGet: INVALID wide,tall = %d %d\n", wide, tall);
     printf("Assuming ASCII header of format \" %%ld %%ld\"\n");
     rewind(fp);
-    if (fscanf(fp, "%ld %ld\n", &lwide, &ltall) != 2
+    if (fscanf_s(fp, "%ld %ld\n", &lwide, &ltall) != 2
         || (wide = (int)lwide) < 0 || wide > *maxw || (tall = (int)ltall) < 0 || tall > *maxt) {
         printf("Bad header; assuming wide,tall = %d, %d:\n", *maxw, *maxt);
         wide = *maxw, tall = *maxt;
@@ -522,7 +523,7 @@ register unc uc;
 unl wid3 = (unl)wide * 3, size = (unl)wid3 * tall;
 
 sprintf_s(oname, "%s.%s.%dx%dx3b", name, ext, wide, tall);
-if (!(fout = fopen(oname, "w"))) {
+if (!(fout = fopen_s(oname, "w"))) {
     fprintf(stderr, "WriteImageRaw: Error opening file %s\n", oname);
     return(-1);
 }
@@ -559,7 +560,7 @@ src[1] = grn;
 src[2] = blu;
 
 sprintf_s(oname, "%s.%s.%dx%dx3b", name, ext, wide, tall);
-if (!(fout = fopen(oname, "w"))) {
+if (!(fout = fopen_s(oname, "w"))) {
     fprintf(stderr, "WriteImageRaw: Error opening file %s\n", oname);
     return(-1);
 }
@@ -577,7 +578,6 @@ for (count = (size_t)wide, chan = 0; chan != 3; chan++) {
 fclose(fout);
 return(0);
 }
-
 
 size_t Header2LPut(fp, wide, tall)
 FILE *fp; int wide, tall;
@@ -597,7 +597,6 @@ FILE *fp; int wide, tall;
 #endif
 #endif
 }
-
 
 #endif	/* 0000 */
 

@@ -127,7 +127,7 @@ dbl     dd, areaB, areaA = rectBoundsFromPoly(recA, mB->tetA[nt], 4);
 
   /*
   copyTetIntoRec(wwD->dsrc,mB->rgbi,   0,0,dW,dH,3,mB->tetA[nt]);
-  sprintf(str,"%d CP TET CRS", 0); showF(wwD->dsrc,dX,dY,dW,dH,3,NULL,str, 5, Zoom);
+  sprintf_s(str,"%d CP TET CRS", 0); showF(wwD->dsrc,dX,dY,dW,dH,3,NULL,str, 5, Zoom);
   */
 
   areaB = rectBoundsFromPoly(recB, mB->tetB[nt], 4);
@@ -143,12 +143,12 @@ dbl     dd, areaB, areaA = rectBoundsFromPoly(recA, mB->tetA[nt], 4);
   /* prn("rect C xywh: %d %d %d %d   areaA:%.2f",dX,dY,dW,dH,(dbl)dW*dH); */
 
   copyTetIntoRec(FeG[1],mA->gray, 0,0,dW,dH,1,mB->tetA[nt]);
-  sprintf(str,"%d CP TET CRS",0 );
+  sprintf_s(str,"%d CP TET CRS",0 );
   /* showF( FeG[1],dX,dY,dW,dH,1,NULL,str, 5, Zoom); */
   showFm(FeG[1],fD,str, 1.0, 5);
 
   copyTetIntoRec(FeG[2],mB->gray,0,0,dW,dH,1,mB->tetB[nt]);
-  sprintf(str,"%d CP TET CRS",nB);
+  sprintf_s(str,"%d CP TET CRS",nB);
   /* showF( FeG[2],dX,dY,dW,dH,1,NULL,str, 7, Zoom); */
   showFm(FeG[2],fD,str, 1.0, 7);
 
@@ -186,16 +186,16 @@ dbl     area = rectBoundsFromPoly(recn, mB->tetA[nt], 4);
     long winid = winget();
     if (nB == 0)  {
       warpRecFrTetBilinRgb(wwD->dsrc,mB->rgbi,0,0,dW,dH,sD,mB->tetA[nt]);
-      sprintf(str,"%d BILIN CRS",nB); showF(wwD->dsrc,0,0,dW,dH,sD->d,NULL,str, 5, Zoom);
+      sprintf_s(str,"%d BILIN CRS",nB); showF(wwD->dsrc,0,0,dW,dH,sD->d,NULL,str, 5, Zoom);
     }
     else {
       warpRecFrTetBilinRgb(wwD->dsrc,mB->rgbi,0,0,dW,dH,sD,mB->tetB[nt]);
-      sprintf(str,"%d BILIN CRS",nB); showF(wwD->dsrc,0,0,dW,dH,sD->d,NULL,str, 7, Zoom);
+      sprintf_s(str,"%d BILIN CRS",nB); showF(wwD->dsrc,0,0,dW,dH,sD->d,NULL,str, 7, Zoom);
       prn("inCrsTetReFlowBil: did mB->rgbi (nB == %d) show?", nB);
 
       warpRecFrTetBilinAcc(wwD,dW,dH,mB->tetA[nt],mB->tetB[nt],nB);
       warpRecFrTetBilinGry(FeG[1], mB->gray,     0,0,dW,dH,fD,mB->tetB[nt]);
-      /*sprintf(str,"%d BILIN CRS",nB); showF(FeG[1],0,0,dW,dH,1,    NULL,str, 7, Zoom);*/
+      /*sprintf_s(str,"%d BILIN CRS",nB); showF(FeG[1],0,0,dW,dH,1,    NULL,str, 7, Zoom);*/
 
       if (flags) {
         rowFlowBac( FeX[1], FeY[1],FeG[0],FeG[1],FeG[2],0,0,dW,dH,fX,fY,fW,fH,PyrTop,PyrBot,0);

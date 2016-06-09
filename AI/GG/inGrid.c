@@ -738,8 +738,8 @@ FILE    *fop;
   if (xcells < 5 || xcells > GTX)  xcells = GrdX;
   if (ycells < 5 || ycells > GTY)  ycells = GrdY;
 
-  sprintf(path,"%s-%s.grid.%dx%d",mA->name,mB->name,ycells,xcells);
-  if (! (fop = fopen(path,"w"))) {
+  sprintf_s(path,"%s-%s.grid.%dx%d",mA->name,mB->name,ycells,xcells);
+  if (! (fop = fopen_s(path,"w"))) {
     warn("writGridTet: can't open %s (w), returning 0",path);
     return 0;
   }
@@ -793,10 +793,10 @@ FILE    *fip;
   if (!gridMade)  makeGridTet(wA,GrdY,GrdX,0);
 
   if (flags)
-    sprintf(path,"%s-%s.grid.%dx%d",mB->name,mA->name,ycells,xcells);
+    sprintf_s(path,"%s-%s.grid.%dx%d",mB->name,mA->name,ycells,xcells);
   else 
-    sprintf(path,"%s-%s.grid.%dx%d",mA->name,mB->name,ycells,xcells);
-  if (! (fip = fopen(path,"r"))) {
+    sprintf_s(path,"%s-%s.grid.%dx%d",mA->name,mB->name,ycells,xcells);
+  if (! (fip = fopen_s(path,"r"))) {
     warn("readGridTet: can't open %s, returning 0",path);
     return 0;
   }

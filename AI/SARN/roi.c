@@ -57,7 +57,7 @@ char *file;
   ROI *roi = NULL;
   FILE *stream;
 
-  if (!(stream = fopen(file,"r")))
+  if (!(stream = fopen_s(file,"r")))
     return (ROI *) NULL;
 }
 

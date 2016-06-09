@@ -141,10 +141,10 @@ coarseFineGauss ( FPYR pyr1, FPYR pyr2, FPYR dx, FPYR dy, FPYR pyrC
 
 /*
   for (lev=toplev; lev >= botlev; lev--) {
-    sprintf(fname,"pyr1.%d.sgi",lev);
+    sprintf_s(fname,"pyr1.%d.sgi",lev);
     write_fimage_sgi(fname,pyr1[lev]);
 
-    sprintf(fname,"pyr2.%d.sgi",lev);
+    sprintf_s(fname,"pyr2.%d.sgi",lev);
     write_fimage_sgi(fname,pyr2[lev]);
   }
 */
@@ -186,9 +186,9 @@ coarseFineGauss ( FPYR pyr1, FPYR pyr2, FPYR dx, FPYR dy, FPYR pyrC
      lsq_lsqgrad_fast(warped,pyr2[lev],dx[lev],dy[lev], pyrC[lev] );
 
 #ifdef DEBUG
-     sprintf(name,"dx%d.float",lev);
+     sprintf_s(name,"dx%d.float",lev);
      write_fimage(name,dx[lev]);
-     sprintf(name,"dy%d.float",lev);
+     sprintf_s(name,"dy%d.float",lev);
      write_fimage(name,dy[lev]);
 #endif
 

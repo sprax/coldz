@@ -69,6 +69,7 @@ float   y,  yMin = poln[0][1];
 return  nMin;
 }
 
+// Why does only this one take longs instead of floats for coords?
 void drawExCtr (long xx, long yy, long rad)
 {
   long xy[2];
