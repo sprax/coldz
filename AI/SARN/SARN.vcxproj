@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectGuid>{9FE4C011-9486-5510-21EA-2FB11B338E29}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\SARN.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\SARN.bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\SARN.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\h;..\h\sarnoff;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Debug\SARN.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\SARN.bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\SARN.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="0decode.c" />
+    <ClCompile Include="0encode.c" />
+    <ClCompile Include="affine_est.c" />
+    <ClCompile Include="arralloc.c" />
+    <ClCompile Include="barralloc.c" />
+    <ClCompile Include="bimgalloc.c" />
+    <ClCompile Include="bimgio.c" />
+    <ClCompile Include="blkmot.c" />
+    <ClCompile Include="bnzrhist.c" />
+    <ClCompile Include="bnzrstats.c" />
+    <ClCompile Include="bpyralloc.c" />
+    <ClCompile Include="bqmfpyralloc.c" />
+    <ClCompile Include="bredexp.c" />
+    <ClCompile Include="breflect.c" />
+    <ClCompile Include="bset.c" />
+    <ClCompile Include="bstats.c" />
+    <ClCompile Include="btoflib.c" />
+    <ClCompile Include="btol.c" />
+    <ClCompile Include="btos.c" />
+    <ClCompile Include="bvhist.c" />
+    <ClCompile Include="bvstats.c" />
+    <ClCompile Include="bzrstats.c" />
+    <ClCompile Include="darralloc.c" />
+    <ClCompile Include="dblredexp.c" />
+    <ClCompile Include="dctimg.c" />
+    <ClCompile Include="die.c" />
+    <ClCompile Include="dimgalloc.c" />
+    <ClCompile Include="eigens2x2.c" />
+    <ClCompile Include="eigsrt.c" />
+    <ClCompile Include="farralloc.c" />
+    <ClCompile Include="fclip.c" />
+    <ClCompile Include="fcopy.c" />
+    <ClCompile Include="fdcts.c" />
+    <ClCompile Include="fdctsub.c" />
+    <ClCompile Include="ffts.c" />
+    <ClCompile Include="fileutils.c" />
+    <ClCompile Include="filtio.c" />
+    <ClCompile Include="filtsub.c" />
+    <ClCompile Include="fimgalloc.c" />
+    <ClCompile Include="fimgimg.c" />
+    <ClCompile Include="fimgio.c" />
+    <ClCompile Include="fimgop.c" />
+    <ClCompile Include="fminmax.c" />
+    <ClCompile Include="fmse.c" />
+    <ClCompile Include="fmsv.c" />
+    <ClCompile Include="fnzrhist.c" />
+    <ClCompile Include="fnzrstats.c" />
+    <ClCompile Include="fpyralloc.c" />
+    <ClCompile Include="fredexp.c" />
+    <ClCompile Include="fsdlap.c" />
+    <ClCompile Include="fset.c" />
+    <ClCompile Include="fstats.c" />
+    <ClCompile Include="ftoblib.c" />
+    <ClCompile Include="ftol.c" />
+    <ClCompile Include="ftos.c" />
+    <ClCompile Include="fvhist.c" />
+    <ClCompile Include="fvstats.c" />
+    <ClCompile Include="fzrstats.c" />
+    <ClCompile Include="getblock.c" />
+    <ClCompile Include="getnzrstats.c" />
+    <ClCompile Include="getvector.c" />
+    <ClCompile Include="getvstats.c" />
+    <ClCompile Include="getzrstats.c" />
+    <ClCompile Include="huffman.c" />
+    <ClCompile Include="hvqmfpyralloc.c" />
+    <ClCompile Include="hvqmfredexp.c" />
+    <ClCompile Include="img_util.c" />
+    <ClCompile Include="imgalloc.c" />
+    <ClCompile Include="jacobi.c" />
+    <ClCompile Include="kernel.c" />
+    <ClCompile Include="laputq.c" />
+    <ClCompile Include="larralloc.c" />
+    <ClCompile Include="limgalloc.c" />
+    <ClCompile Include="limgio.c" />
+    <ClCompile Include="lkflow.c" />
+    <ClCompile Include="lsqsub.c" />
+    <ClCompile Include="lsqsub_fwd.c" />
+    <ClCompile Include="ltob.c" />
+    <ClCompile Include="ltof.c" />
+    <ClCompile Include="ltos.c" />
+    <ClCompile Include="lubksb.c" />
+    <ClCompile Include="ludcmp.c" />
+    <ClCompile Include="mathtls.c" />
+    <ClCompile Include="mmath.c" />
+    <ClCompile Include="nzrhist.c" />
+    <ClCompile Include="profile.c" />
+    <ClCompile Include="putblock.c" />
+    <ClCompile Include="putvector.c" />
+    <ClCompile Include="qmfpyralloc.c" />
+    <ClCompile Include="qmfredexp.c" />
+    <ClCompile Include="qmfsub.c" />
+    <ClCompile Include="ratesub.c" />
+    <ClCompile Include="redexp.c" />
+    <ClCompile Include="redexp_fwd.c" />
+    <ClCompile Include="redirected.c" />
+    <ClCompile Include="reflect.c" />
+    <ClCompile Include="roi.c" />
+    <ClCompile Include="sarralloc.c" />
+    <ClCompile Include="seqio.c" />
+    <ClCompile Include="sim_est.c" />
+    <ClCompile Include="simgalloc.c" />
+    <ClCompile Include="simgimg.c" />
+    <ClCompile Include="simgio.c" />
+    <ClCompile Include="snzrhist.c" />
+    <ClCompile Include="snzrstats.c" />
+    <ClCompile Include="spyralloc.c" />
+    <ClCompile Include="sqmfpyralloc.c" />
+    <ClCompile Include="squeezer.c" />
+    <ClCompile Include="sstats.c" />
+    <ClCompile Include="stob.c" />
+    <ClCompile Include="stof.c" />
+    <ClCompile Include="stol.c" />
+    <ClCompile Include="svdlib.c" />
+    <ClCompile Include="svhist.c" />
+    <ClCompile Include="svstats.c" />
+    <ClCompile Include="szrhist.c" />
+    <ClCompile Include="szrstats.c" />
+    <ClCompile Include="trans_est.c" />
+    <ClCompile Include="triangulate.c" />
+    <ClCompile Include="ucoders.c" />
+    <ClCompile Include="uqnt.c" />
+    <ClCompile Include="utcoders.c" />
+    <ClCompile Include="utqnt.c" />
+    <ClCompile Include="vhist.c" />
+    <ClCompile Include="vqio.c" />
+    <ClCompile Include="warpers.c" />
+    <ClCompile Include="warps.c" />
+    <ClCompile Include="zrhist.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

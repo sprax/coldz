@@ -1,0 +1,11 @@
+#
+# Makefile placeholder -- S.R.Lines -- 93-03-20
+#
+all .DEFAULT:
+	@echo "	"
+	@set p = `pwd` ; echo "	PROJECT $$p:t: No current default target."
+	@echo "	"
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{bcc045f3-75f7-411d-8721-09807c4c4fc2}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{28f6bc7e-19d7-412e-83be-5a776db61a39}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mjBord.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mjBordUnc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mjCopy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mjMake.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mjPack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mjRead.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

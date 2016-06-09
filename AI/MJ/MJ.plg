@@ -1,0 +1,40 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: MJ - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\slines\LOCALS~1\Temp\RSP6BA.tmp" with contents
+[
+/nologo /MLd /W3 /WX /Gm /GX /ZI /Od /I "..\h" /I "..\h\m" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FR"Debug/" /Fp"Debug/MJ.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\SRL\C\AI\MJ\mjBord.c"
+"D:\SRL\C\AI\MJ\mjBordUnc.c"
+"D:\SRL\C\AI\MJ\mjCopy.c"
+"D:\SRL\C\AI\MJ\mjMake.c"
+"D:\SRL\C\AI\MJ\mjPack.c"
+"D:\SRL\C\AI\MJ\mjRead.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\slines\LOCALS~1\Temp\RSP6BA.tmp" 
+Creating command line "link.exe -lib /nologo /out:"Debug\MJ.lib"  .\Debug\mjBord.obj .\Debug\mjBordUnc.obj .\Debug\mjCopy.obj .\Debug\mjMake.obj .\Debug\mjPack.obj .\Debug\mjRead.obj "
+<h3>Output Window</h3>
+Compiling...
+mjBord.c
+mjBordUnc.c
+mjCopy.c
+mjMake.c
+mjPack.c
+mjRead.c
+Creating library...
+Creating command line "bscmake.exe /nologo /o"Debug/MJ.bsc"  .\Debug\mjBord.sbr .\Debug\mjBordUnc.sbr .\Debug\mjCopy.sbr .\Debug\mjMake.sbr .\Debug\mjPack.sbr .\Debug\mjRead.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+MJ.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,62 @@
+#
+# /usr/local/num/recipes/Makefile
+#
+# VPATH=	$(TOP)../num/recipes
+# DEFINES=	-I$(TOP)../num
+  LIBDIR=	/usr/local/lib
+  INCDIR=	/usr/local/include
+  CFLAGS=	-O2
+
+all: libnum.a
+
+install: libnum.a
+	ranlib libnum.a
+	rm -f $(LIBDIR)/libnum.a
+	ln libnum.a $(LIBDIR)
+	ln ../*.h $(INCDIR)
+
+OBJECTS=adi.o amoeba.o anneal.o avevar.o \
+	balanc.o bcucof.o bcuint.o bessi.o bessi0.o \
+	bessi1.o bessj.o bessj0.o bessj1.o bessk.o \
+	bessk0.o bessk1.o bessy.o bessy0.o bessy1.o \
+	beta.o betacf.o betai.o bico.o bksub.o bnldev.o \
+	brent.o bsstep.o caldat.o cel.o chder.o chebev.o \
+	chebft.o chebpc.o chint.o chsone.o chstwo.o \
+	cntab1.o cntab2.o convlv.o correl.o cosft.o \
+	covsrt.o crank.o dbrent.o ddpoly.o des.o desks.o \
+	df1dim.o dfpmin.o difeq.o dlinmin.o eclass.o \
+	eclazz.o eigsrt.o el2.o elmhes.o erf.o erfc.o \
+	erfcc.o eulsum.o evlmem.o expdev.o f1dim.o \
+	factln.o factrl.o fgauss.o fit.o fixrts.o fleg.o \
+	flmoon.o four1.o fourn.o fpoly.o frprmn.o ftest.o \
+	gamdev.o gammln.o gammp.o gammq.o gasdev.o \
+	gauleg.o gaussj.o gcf.o golden.o gser.o hqr.o \
+	hunt.o indexx.o irbit1.o irbit2.o jacobi.o \
+	julday.o kendl1.o kendl2.o ksone.o kstwo.o \
+	laguer.o lfit.o linmin.o locate.o lubksb.o \
+	ludcmp.o mdian1.o mdian2.o medfit.o memcof.o \
+	midexp.o midinf.o midpnt.o midsql.o midsqu.o \
+	mmid.o mnbrak.o mnewt.o moment.o mprove.o \
+	mrqcof.o mrqmin.o odeint.o pcshft.o pearsn.o \
+	piksr2.o piksrt.o pinvs.o plgndr.o poidev.o \
+	polcoe.o polcof.o poldiv.o polin2.o polint.o \
+	powell.o predic.o probks.o pzextr.o qcksrt.o \
+	qgaus.o qromb.o qromo.o qroot.o qsimp.o qtrap.o \
+	quad3d.o \
+	rank.o ratint.o realft.o red.o rk4.o rkdumb.o \
+	rkqc.o rofunc.o rtbis.o rtflsp.o rtnewt.o \
+	rtsafe.o rtsec.o rzextr.o scrsho.o \
+	shell.o shoot.o shootf.o simp1.o simp2.o simp3.o \
+	simplx.o sinft.o smooft.o sncndn.o solvde.o sor.o \
+	sort.o sort2.o sort3.o sparse.o spctrm.o spear.o \
+	splie2.o splin2.o spline.o splint.o svbksb.o \
+	svdcmp.o svdfit.o svdvar.o toeplz.o tptest.o \
+	tqli.o trapzd.o tred2.o tridag.o ttest.o tutest.o \
+	twofft.o vander.o zbrac.o zbrak.o zbrent.o \
+	zroots.o complex.o nrutil.o
+
+libnum.a: $(OBJECTS)
+	rm -f libnum.a
+	ar rcv libnum.a $(OBJECTS)
+
+

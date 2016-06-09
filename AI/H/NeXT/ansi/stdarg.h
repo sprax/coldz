@@ -1,0 +1,1 @@
+#ifndef _ANSI_STDARG_H_#define _ANSI_STDARG_H_/* BSD compatibility: if <varargs.h> seen, don't redefine per ANSI */#ifndef __VARARGS__#include <ansi/machine/stdarg.h>#endif __VARARGS__#endif _ANSI_STDARG_H_

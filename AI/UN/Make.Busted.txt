@@ -1,0 +1,56 @@
+########################################################
+# un/src/Make.Busted -- libun.a    S.R.Lines    93.5.20
+# It would be nice if this version worked, but on all
+# systems I've tried it on, the dependencies are bungled,
+# not remaking when UnLib.h changes, doing extra compiles
+# when a .c file is updated.  It even tries to build libun
+# (no .a suffix!).  Yet it's straight out of AT&T's
+# SysV R3.2 Programmer's Guide, Ch. 13, so go figure.
+#
+# MAKE=		/bin/make##GNU make screws up libfoo(bar.o) the worst.
+  SHELL=	/bin/sh
+  MM=		iris
+  MFGR=		DEC
+  AR=		ar
+  ARFLAGS=	cruv
+  RANLIB=	ranlib	## set RANLIB=echo if not needed (HP, etc.)
+  CC=		cc
+# CC=		gcc -Wall
+  CFLAGS=	-O
+  DEBUG=	_NO_DEBUG
+  CPPFLAGS=	-D$(MFGR) -D$(DEBUG) -D_NO_MAXLDBL
+  LDFLAGS=	-s
+  MALD=		$(HOME)/bin/$(MARC)/
+
+INSTALL= $(MALD)libun.a
+
+.c.o:
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+.c:
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LDFLAGS) $(SLIBS) -o $@
+
+all:	lib install
+bin:	UnTest
+lib:	libun.a
+install: $(INSTALL)
+
+libun.a: libun(unMath.o) libun(unString.o)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(?:.o=.c)
+	$(AR) $(ARFLAGS)  $@ $?
+	rm -f $?
+
+$(INSTALL):
+	$(RANLIB)  $(@F)
+	-( ln $(@F) $@ )
+
+clean:
+	rm -f   *.o *~
+
+clobber:
+	rm -f   *.o ${EXES}
+
+  $(MALD)libun.a:	libun.a
+  libun(unMath.o):	unLib.h
+  libun(unString.o):	unLib.h
+
+

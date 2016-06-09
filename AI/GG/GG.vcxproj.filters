@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{b6a0f44d-b20b-4751-b0ba-915d3e427eb3}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{7fca06fa-bf87-4e74-8d45-10eca7c56a96}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="blerpFlowTet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="blipTri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bnipTri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="copyTet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="copyTri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gaussFlow.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="in3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inCrsTet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inCrsTri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inFloTet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inFloTri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inGrid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inMapOld.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inMapTri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inParm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inR.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inWarpBil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inWarpBilin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inWarpPersp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="jkCan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mainN.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mapFwdTri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrixOps.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="modFwdTri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowFimg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="surfWLSO.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unFlags.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpPersp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpPerspFwd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpPerspI.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpPerspInv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpTetBil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpTetBox.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpTetBoxNen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpTetBoxy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="winDraw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="winLooper.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="winNew.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="winSliders.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="winWarp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="winZoom.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

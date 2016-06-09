@@ -1,0 +1,716 @@
+/* 
+Motion estimation using priviledged points. With 6 given corresponding
+points we can recover the epipolar geometry (the location of epipoles and 
+hence the direction of epipolar lines) and then use the constant brightness
+info to compute flow along the known epipolar lines (see AI memo 1327 for
+the orthographic case, and AI TR 1401 for the perspective case). We assume
+here that the first 4 points are coming from coplanar points. For a human
+face this is a reasonable assumption since a face is bilateraly symmetric.
+We can do without this assumption and use 8 points instead (using the 
+Essential matrix of Longuett-Higgins) but that method tends to be numerically
+unstable (points close to critical surface, etc.). 
+*/
+
+/*  Amnon Shashua, MIT, March 1993 */
+
+
+#include "imgdec.h"
+#include "imgmacro.h"
+
+float **fmat_trn(),**fmat_mul(),*fmat_vec_mul();
+
+#define DEBUG 
+#define DEFAULT_PRIVLG "/home/cbcl/amnon/privlg.inp"
+#define LAPLACIAN 
+#define SGN(A) (((A) > 0) ? (1) : (-(1)))
+typedef struct {
+   float *ptr;
+   int s;            /* size */
+} FVEC;
+  
+usage(prog)
+char *prog;
+{
+  static char *helpmsg[] = {
+    "Function: Coarse-fine flow computation based on recovering\n",
+    "epipolar geometry using 6 known correspondences (AI-memo 1327, AI-TR 1401).\n",
+    "Options:\n",
+    "  -w (char *): Warped file (first frame warped with the computed flow). [Default: img2_warped.pix]\n",
+    "  -p (char *): Priviledged points input file [Default: ~amnon/privlg.inp\n",
+    "  -t (int):    Top level of pyramid. [Default: 4]\n",
+    "  -l (int):    Level till which coarse-fine refinement is done. [Default: 0]\n",
+    "Output flow fields are written to the files 'dx.float' and 'dy.float'\n",
+    NULL
+  };
+  char **p=helpmsg;
+
+  fprintf(stderr,"Usage: %s {Options} image1 image2\n",prog);
+  while (*p)
+    (void) fputs(*p++,stderr);
+  exit(-1);
+}
+
+int Image_border = 10;
+FILTER rf,ef;
+
+main(argc,argv)
+char **argv;
+int argc;
+{
+   char *c,*prog=argv[0];
+   char file[MAX_STR_LEN],filtfile[MAX_STR_LEN];
+   char privlgfile[MAX_STR_LEN],warpfile[MAX_STR_LEN];
+   FPYR pyr1,pyr2,alpha;
+   FIMAGE img1,img2,proj_warp,dx,dy;
+   FVEC xi,yi,nxi,nyi;
+   float *epi, **A, tmp, dx_tmp, dy_tmp;
+   float *epipole();
+   int i,j, botlev=0,toplev=4,lev,finlev=0;
+
+   strcpy(filtfile,DEFAULT_PYR_FILTER);	/* default filter */
+   strcpy(warpfile,"img2_warped.pix");  /* default warped file */
+   strcpy(privlgfile,DEFAULT_PRIVLG);	/* default priviledge point motion */
+   while (--argc > 0 && (*++argv)[0] == '-')
+     for (c = argv[0]+1; *c != '\0'; c++)
+       switch (*c) {
+         case 'w': 
+           argc--; strcpy(warpfile,*++argv);
+           break;
+         case 'p': 
+           argc--; strcpy(privlgfile,*++argv);
+           break;
+         case 't':
+           argc--; toplev = atoi(*++argv);
+           break;
+         case 'l':
+           argc--; finlev = atoi(*++argv);
+           break;
+         default:
+           fprintf(stderr,"%s: illegal option %c\n",prog,*c);
+         case 'h':
+           usage(prog);
+           break;
+       }
+   if (argc != 2)
+     usage(prog);
+
+   getprivlgmotion(privlgfile,&xi,&yi,&nxi,&nyi);
+   if (!read_fimage(*argv,&img1)) {
+     fprintf(stderr,"%s: couldn't open file %s\n",prog,*argv);
+     exit(-1);
+   }
+   if (!read_fimage(*++argv,&img2)) {
+     fprintf(stderr,"%s: couldn't open file %s\n",prog,*argv);
+     exit(-1);
+   }
+   if (img1.w != img2.w || img1.h != img2.h) {
+     fprintf(stderr,"%s: image size mismatch\n",prog);
+     exit(-1);
+   }
+
+
+   proj_warp.w = dx.w = dy.w =  img1.w;
+   proj_warp.h = dx.h = dy.h =  img1.h;
+   alloc_fimage(&proj_warp);   
+   alloc_fimage(&dx);   
+   alloc_fimage(&dy);   
+
+/* A is a 3x3 projective trans of the plane (from img2 to img1). 
+   epi is the location of the epipole in img1 (this is a bit confusing,
+   but the correspondences are computed from img2 to img1)*/
+
+   A=alloc_farray(1,3,1,3);
+   proj_2d(xi,yi,nxi,nyi,A);
+   epi = epipole(xi,yi,nxi,nyi,A);
+
+/* proj_warp is the intermediate image (first image warped with the 2D proj
+   transformation).
+*/
+
+   bicubic_warp_projective(img1,proj_warp,A); 
+
+#ifdef DEBUG
+  write_fimage("proj_warp.pix",proj_warp); 
+#endif
+
+
+   flow(proj_warp,img2,dx,dy,A,epi,botlev,finlev,toplev);
+
+#ifdef DEBUG
+  bicubic_warp_projective(img1,proj_warp,A);
+  bilinear_warp(proj_warp,img2,dx,dy,1.0);  /* write onto img2 */
+  write_fimage("warped.pix",img2); 
+#endif
+
+/* 
+   add displacement fields, note that dx,dy are from img2 to proj_warp
+   with their sign NOT flipped.
+*/
+
+   for (i=0; i<dx.h; i++)
+     for (j=0; j<dx.w; j++) {
+       
+       tmp = A[3][1]*(j +dx.ptr[i][j]) + A[3][2]*(i + dy.ptr[i][j]) + 
+              A[3][3]*100.0;
+       dx_tmp = ((A[1][1]*(j + dx.ptr[i][j])  + A[1][2]*(i + dy.ptr[i][j])
+                + A[1][3]*100.0)/tmp)*100.0 - j;
+       dy_tmp = ((A[2][1]*(j + dx.ptr[i][j]) + A[2][2]*(i + dy.ptr[i][j])
+                + A[2][3]*100.0)/tmp)*100.0 - i;
+
+       dx.ptr[i][j] = - dx_tmp;
+       dy.ptr[i][j] = - dy_tmp;
+     }
+
+
+/* new dx,dy are from img2 to img1 with sign flip. */
+
+   bicubic_warp(img1,img2,dx,dy,-1.0);  
+   write_fimage(warpfile,img2);
+
+   write_fimage("dx.float",dx);
+   write_fimage("dy.float",dy);
+}
+
+
+proj_2d(nxi,nyi,xi,yi,A)
+FVEC xi,yi,nxi,nyi;
+float **A;
+{
+/* 
+compute the projective transformation of the plane from 4 corresponding
+points. Note that we compute the transformation from img2 to img1 (!) 
+(thats why the x,y are switched with nx,ny compared to the calling function).
+*/
+
+   float **B, *rhs, *x;
+   int i,j, r1, r2;
+
+   B= alloc_farray(1,8,1,8);
+   rhs = alloc_fvector(1,8);
+   for (i=1; i<=8; i++)
+     for (j=1; j<=8; j++) B[i][j]=0.0;
+  
+/* 
+   set up an 8x8 system from 4 corresponding points. We embed image 
+   within a 3D vector whose 3rd component is set to 1
+*/
+
+   for (j=0; j < 4; j++) {
+     r1 = 2*j + 1;
+     r2 = r1+1;
+     B[r1][1]=xi.ptr[j];
+     B[r1][2]=yi.ptr[j];
+     B[r1][3]=100.0;
+     B[r1][7]= - (xi.ptr[j]*nxi.ptr[j]/100.0);
+     B[r1][8]= - (yi.ptr[j]*nxi.ptr[j]/100.0);
+     B[r2][4]=xi.ptr[j];
+     B[r2][5]=yi.ptr[j];
+     B[r2][6]=100.0;
+     B[r2][7]= - (xi.ptr[j]*nyi.ptr[j]/100.0);
+     B[r2][8]= - (yi.ptr[j]*nyi.ptr[j]/100.0);
+     rhs[r1] = nxi.ptr[j];
+     rhs[r2] = nyi.ptr[j];
+   }
+#ifdef DEBUG
+   fprintf(stderr,"elements of B:\n");
+   for (i=1; i<=8; i++) {
+     fprintf(stderr,"\n");
+     for (j=1; j<=8; j++) fprintf(stderr,"%f ",B[i][j]);
+   }
+#endif
+
+
+   x = solve_linear(B,rhs,8);
+#ifdef DEBUG
+   fprintf(stderr, "determinant of B = %f", determinant(B,8));
+   fprintf(stderr,"elements of projective trans: ");
+   for(i=1; i<=8; i++) fprintf(stderr,"%f ",x[i]);
+   fprintf(stderr,"\n");
+#endif
+
+   for (i=1; i<=3; i++)
+     for (j=1; j<=3; j++)
+       A[i][j] = x[(i-1)*3 + j];
+   A[3][3] = 1.0;
+ 
+   free_farray(B,1,8,1,8);
+   free_fvector(rhs,1,8,1,8);
+   free_fvector(x,1,8,1,8);
+}
+
+
+float *epipole(nxi,nyi,xi,yi,A)
+FVEC nxi,nyi,xi,yi;
+float **A;
+{
+/*
+compute the epipole in img2. Given the projective transformation A from
+frame 1 to 2, we need two points out of the reference plane to determine
+the location of the epipole.
+Note that we actually go about it in the opposite way: from img2 to img1,
+therefore the x,y and nx,ny are switched (look at the calling routine).
+
+  epi = (p x Ap) x (q x Aq),  where p,q are two points coming from 
+                              out-of-reference-plane object points.
+*/
+
+   float *p, *q, *epi, *inc_epi;
+   int i,j;
+
+   p = alloc_fvector(1,3);
+   q = alloc_fvector(1,3);
+   epi = alloc_fvector(1,3);
+   for(i=1; i<=3; i++)epi[i]=0.0;
+
+   p[3] = q[3] = 1.0;
+   p[1] = xi.ptr[4]/100.0;  
+   p[2] = yi.ptr[4]/100.0;
+/* 
+  loop over all the remaining corresponding points 5,6,... 
+  the mathematically elegant way is to do a principle component analysis,
+  but that tend to be unstable numerically. Just averaging gives good results.
+*/
+   for(i=5; i<xi.s; i++) {
+      q[1]=xi.ptr[i]/100.0;
+      q[2]=yi.ptr[i]/100.0;
+      inc_epi = cross_product(cross_product(p,Ax(A,p,3,3)),
+                              cross_product(q,Ax(A,q,3,3)));
+#ifdef DEBUG
+   fprintf(stderr,"epipole = %f %f %f\n", inc_epi[1],inc_epi[2],inc_epi[3]);
+#endif
+      for(j=1; j<=3; j++) epi[j] += inc_epi[j];
+    }
+#ifdef DEBUG
+   fprintf(stderr,"final epipole = %f %f %f\n", epi[1],epi[2],epi[3]);
+#endif
+
+   return(epi);
+}
+
+
+flow(img1,img2,dx_out,dy_out,A,epi,botlev,finlev,toplev)
+FIMAGE img1,img2,dx_out,dy_out; 
+float **A, *epi;
+int botlev,finlev,toplev;  
+{
+
+   char filtfile[MAX_STR_LEN];
+   FPYR pyr1,pyr2,alpha,epi_pyrx,epi_pyry;
+
+
+   strcpy(filtfile,DEFAULT_PYR_FILTER);	/* default filter */
+   getpyrfilters(filtfile,&rf,&ef);
+
+/* Set up Laplacian pyramids for coarse to fine estimation */
+
+   def_fpyr(pyr1,botlev,img1.w,img1.h);
+   alloc_fpyr(pyr1,botlev+1,toplev+1);
+   pyr1[botlev].ptr = img1.ptr;
+   def_fpyr(pyr2,botlev,img2.w,img2.h);
+   alloc_fpyr(pyr2,botlev+1,toplev+1);
+   pyr2[botlev].ptr = img2.ptr;
+   def_fpyr(alpha,botlev,img1.w,img1.h);
+   alloc_fpyr(alpha,finlev,toplev);
+   def_fpyr(epi_pyrx,botlev,img1.w,img1.h);
+   def_fpyr(epi_pyry,botlev,img1.w,img1.h);
+   alloc_fpyr(epi_pyrx,botlev,toplev);
+   alloc_fpyr(epi_pyry,botlev,toplev);
+
+/* epipolar line direction at each point */
+   fill_epi_pyr(epi_pyrx,epi_pyry,epi,toplev); 
+
+   coarse_fine(pyr1,pyr2,dx_out,dy_out,epi_pyrx,epi_pyry,alpha,botlev,finlev,toplev);
+}
+
+
+fill_epi_pyr(epi_pyrx,epi_pyry,epi,toplev)
+FPYR epi_pyrx,epi_pyry;
+float *epi;
+int toplev;
+{
+/*
+for reasons of efficiency we pre-compute the directions of epipolar
+lines at all levels of the pyramidal analysis. Note the epipolar
+directions are in img1 (not img2 as one would imagine....).
+*/
+
+   float **px, **py;
+   float dirx,diry,norm;
+   int lev, i,j, w = epi_pyrx[0].w, h = epi_pyrx[0].h;
+   char *fname[80];
+
+   px = epi_pyrx[0].ptr;  /* botlev of pyramid */
+   py = epi_pyry[0].ptr;
+/*
+note that epi[3]=0 when all lines are parallel to each other. We would
+like to recover the lines without making a distinction between converging
+lines and parallel lines --- therefore we should avoid dividing by epi[3].
+*/
+
+
+   for (i=0; i<=epi_pyrx[0].h; i++)
+     for (j=0; j<=epi_pyrx[0].w; j++) {
+/*
+       dirx = epi[3]*j - epi[1]*100.0;
+       diry = epi[3]*i - epi[2]*100.0;
+*/
+       dirx = - epi[3]*j + epi[1]*100.0;
+       diry = - epi[3]*i + epi[2]*100.0;
+
+       norm = sqrt(dirx*dirx + diry*diry);
+       px[i][j] = dirx/norm;
+       py[i][j] = diry/norm;
+     }
+#ifdef DEBUG
+   write_fimage("epix.float",epi_pyrx[0]);
+   write_fimage("epiy.float",epi_pyry[0]); 
+#endif
+   
+   
+   for(lev=1; lev<=toplev; lev++) {
+     px = epi_pyrx[lev].ptr;
+     py = epi_pyry[lev].ptr;
+     for (i=0; i<=epi_pyrx[lev].h; i++)
+       for (j=0; j<=epi_pyrx[lev].w; j++) {
+       px[i][j] = epi_pyrx[lev-1].ptr[2*i][2*j];
+       py[i][j] = epi_pyry[lev-1].ptr[2*i][2*j];
+     }
+/*
+#ifdef DEBUG
+     sprintf(fname,"epix_%d.float",lev);
+     write_fimage(fname,epi_pyrx[lev]);
+     sprintf(fname,"epiy_%d.float",lev);
+     write_fimage(fname,epi_pyry[lev]);
+#endif
+*/
+   }
+ }
+
+
+
+alpha2dxdy(dx,dy,epi_x,epi_y,alpha)
+FIMAGE dx,dy,epi_x,epi_y,alpha;
+{
+   int i,j;
+
+   for (i=0; i<dx.h; i++)
+     for (j=0; j<dx.w; j++) {
+       dx.ptr[i][j] = alpha.ptr[i][j]*epi_x.ptr[i][j];
+       dy.ptr[i][j] = alpha.ptr[i][j]*epi_y.ptr[i][j];
+     }
+
+ }
+
+
+warp_along_lines(in,out,alpha,epi_x,epi_y,scale)
+FIMAGE in,out,alpha,epi_x,epi_y;
+float scale;
+{
+   register float **p=in.ptr, **q=out.ptr, **palpha=alpha.ptr;
+   int x1,y1,x2,y2,w=in.w-1,h=in.h-1,i,j;
+   float x,y,xfrac,yfrac,y1val,y2val;
+
+   reflect(in,3,3);
+   for (j=0; j < out.h; j++)
+     for (i=0; i < out.w; i++) {
+       x = i + scale*palpha[j][i]*epi_x.ptr[j][i];
+       y = j + scale*palpha[j][i]*epi_y.ptr[j][i];
+       x1 = (int) floor(x);
+       y1 = (int) floor(y);
+       xfrac = x - x1;
+       yfrac = y - y1;
+       x1 = MAX(0,MIN(w,x1));  x2 = x1 + 1;
+       y1 = MAX(0,MIN(h,y1));  y2 = y1 + 1;
+       y1val = p[y1][x1] + (p[y1][x2] - p[y1][x1])*xfrac;
+       y2val = p[y2][x1] + (p[y2][x2] - p[y2][x1])*xfrac;
+       q[j][i] = y1val + yfrac*(y2val - y1val);;
+     }
+}
+
+
+#define NBLUR	1	/* Number of smoothing levels */
+#define LIMIT		/* limit residual velocities (only gradient method) */
+#define EXTEND
+
+
+coarse_fine(pyr1,pyr2,dx,dy,epi_pyrx,epi_pyry,alpha,botlev,finlev,toplev)
+FPYR pyr1,pyr2,epi_pyrx,epi_pyry,alpha;
+FIMAGE dx,dy;
+int botlev,finlev,toplev;
+{
+   FIMAGE warped;
+   int lev;
+   extern FILTER rf,ef;
+   char fname[80];
+
+/* Construct Laplacian pyramids */
+
+   reduce(pyr1,botlev,toplev+1,rf);
+   reduce(pyr2,botlev,toplev+1,rf);
+   expand(pyr1,botlev,toplev+1,ef,-1);
+   expand(pyr2,botlev,toplev+1,ef,-1);
+
+
+/* Start coarse to fine motion estimation */
+   for (lev=toplev; lev >= finlev; lev--) {
+#ifdef DEBUG
+     printf("Estimating velocities on level %d\n",lev);
+#endif
+
+     if (lev != toplev) {	/* expand previous levels velocity estimate */
+       fmultiply(alpha[lev+1],2.0);
+       expand(alpha,lev,lev+1,ef,0);  /* for warping */
+     } else {
+       fset(alpha[lev],0.0);
+     }
+
+     warped.w = pyr1[lev].w; warped.h = pyr1[lev].h; alloc_fimage(&warped);
+     warp_along_lines(pyr1[lev],warped,alpha[lev],epi_pyrx[lev],epi_pyry[lev],1.0);
+
+/* estimate new incremental alpha (rewrite alpha[lev]) */
+     estalpha_lsq(warped,pyr2[lev],alpha[lev],epi_pyrx[lev],epi_pyry[lev],lev);
+     if (lev != toplev) {	/* add in previous estimates to current */
+       expand(alpha,lev,lev+1,ef,1);
+     }
+
+     free_fimage(warped);
+     }
+   alpha2dxdy(dx,dy,epi_pyrx[0],epi_pyry[0],alpha[0]);         
+}
+
+#define DET_TH 0.5
+   
+
+#define WIN 2  /* half a window */
+#define ANGLE_TH 0.25 
+#define CONF_TH 1.0
+#define GRAD_TH 3.0
+#define INTERP
+
+estalpha_lsq(image1,image2,new_alpha,epi_x,epi_y,lev)
+FIMAGE image1,image2,epi_x,epi_y,new_alpha;
+int lev;
+{
+   FIMAGE G,Gx,Gy,Gt;
+   float **alpha=new_alpha.ptr;
+   float **pg, **pgx, **pgy, **pgt;
+   float conf, tmp,gyx, sx, sy;
+   int w=image1.w, h=image1.h;
+   int i,j,x,y;
+   float angle,dot_prod;
+   char *fname[80];
+
+   fset(new_alpha,0.0);
+
+/* Reflect images */
+   reflect(image1,Image_border,3);
+   reflect(image2,Image_border,3);
+/* Gradient Estimation */
+   G.w = Gx.w = Gy.w = Gt.w = w;  G.h = Gx.h = Gy.h = Gt.h = h;
+   alloc_fimage(&Gx); alloc_fimage(&Gy); 
+   alloc_fimage(&Gt); alloc_fimage(&G);
+/* estimate gradients at image2 (flow from image2 to image1) */
+
+   gradient_estimation(image1,image2,Gx,Gy,Gt);
+   gradient_mag(Gx,Gy,G);
+
+   pg=G.ptr; pgx=Gx.ptr; pgy=Gy.ptr; pgt=Gt.ptr;
+   for (i=1; i<h-1; i++) 
+     for (j=1; j<w-1; j++) { 
+       conf = 0.0; tmp = 0.0; 
+       sx = epi_x.ptr[i][j]; 
+       sy = epi_y.ptr[i][j]; 
+/* overdetrmine accross a patch */
+       for (y=i-WIN; y<=i+WIN; y++) 
+         for (x=j-WIN; x<=j+WIN; x++) {
+           gyx=pg[y][x];
+           dot_prod = sx*pgx[y][x] + sy*pgy[y][x];
+           angle = dot_prod/gyx;
+           if (ABS(angle) > ANGLE_TH && gyx > GRAD_TH) {
+             tmp -= gyx*pgt[y][x]*dot_prod;
+             conf += gyx*dot_prod*dot_prod;
+           }
+
+         }
+       if ( ABS(conf) < CONF_TH) alpha[i][j]=0;
+         else alpha[i][j]= tmp/conf;
+       if (ABS(alpha[i][j]) > 1.0) alpha[i][j]=SGN(alpha[i][j]);  
+      }
+       
+#ifdef INTERP
+     membrane(new_alpha,lev);
+#endif
+/*     if (lev != 0)blur(new_alpha,NBLUR); */
+     blur(new_alpha,NBLUR); 
+
+   free_fimage(G); free_fimage(Gt);  free_fimage(Gy);  free_fimage(Gx);
+}
+
+gradient_mag(Gx,Gy,G)
+FIMAGE Gx,Gy,G;
+{
+   int x,y;
+
+   for (y=0; y<G.h; y++)
+     for (x=0; x<G.w; x++) {
+       G.ptr[y][x] = (float) sqrt((double)(Gx.ptr[y][x]*Gx.ptr[y][x] +
+                                           Gy.ptr[y][x]*Gy.ptr[y][x]));
+     }
+ }
+
+       
+#define BOTH_GRADIENTS
+gradient_estimation(image1,image2,Gx,Gy,Gt)
+FIMAGE image1,image2;
+FIMAGE Gx,Gy,Gt;
+{
+   float **img1=image1.ptr,**img2=image2.ptr;
+   float **gx=Gx.ptr, **gy=Gy.ptr, **gt=Gt.ptr;
+   int w=image1.w, h=image2.h, x,y;
+   FIMAGE Scr;
+   float **scr;
+
+   Scr.w = w;  Scr.h = h;  alloc_fimage(&Scr);  scr = Scr.ptr; 
+   fsubtract_img(Scr,image1,image2);
+   reflect(Scr,3,3);
+   for (y=0; y < h; y++)
+     for (x=0; x < w; x++) {
+#ifdef BOTH_GRADIENTS
+       gx[y][x] = (img2[y][x+1] - img2[y][x-1] + 
+                   img1[y][x+1] - img1[y][x-1])/4.0;
+       gy[y][x] = (img2[y+1][x] - img2[y-1][x] + 
+                   img1[y+1][x] - img1[y-1][x])/4.0;
+       gt[y][x] = (scr[y][x-1] + scr[y][x+1] + scr[y][x] +
+                   scr[y-1][x] + scr[y+1][x])/5.0;
+#endif
+#ifdef FIVE_GRADIENT
+       gx[y][x] = (img2[y][x-2] -8.0*img2[y][x-1] + 8.0*img2[y][x+1]
+                   - img2[y][x+2])/12.0;
+       gy[y][x] = (img2[y-2][x] -8.0*img2[y-1][x] + 8.0*img2[y+1][x]
+                   - img2[y+2][x])/12.0;
+       gt[y][x] = (scr[y][x-1] + scr[y][x+1] + scr[y][x] +
+                   scr[y-1][x] + scr[y+1][x])/5.0;
+#endif
+
+#ifdef BOTH_FIVE_GRADIENT
+       gx[y][x] = (img2[y][x-2] -8.0*img2[y][x-1] + 8.0*img2[y][x+1]
+                   - img2[y][x+2] +
+                   img1[y][x-2] -8.0*img1[y][x-1] + 8.0*img1[y][x+1]
+                   - img1[y][x+2])/24.0;
+       gy[y][x] = (img2[y-2][x] -8.0*img2[y-1][x] + 8.0*img2[y+1][x]
+                   - img2[y+2][x] +
+                   img1[y-2][x] -8.0*img1[y-1][x] + 8.0*img1[y+1][x]
+                   - img1[y+2][x])/24.0;
+       gt[y][x] = (scr[y][x-1] + scr[y][x+1] + scr[y][x] +
+                   scr[y-1][x] + scr[y+1][x])/5.0;
+#endif
+
+#ifdef THREE_GRADIENT
+       gx[y][x] = (img2[y][x+1] - img2[y][x-1])/2.0;
+       gy[y][x] = (img2[y+1][x] - img2[y-1][x])/2.0;
+       gt[y][x] = scr[y][x];
+#endif
+
+     }
+   free_fimage(Scr);
+}
+
+
+
+blur(img,nlev)
+FIMAGE img;
+int nlev;
+{
+   FPYR pyr;
+   int botlev=0,toplev=nlev;
+   extern FILTER rf,ef;
+
+
+   def_fpyr(pyr,botlev,img.w,img.h);
+   alloc_fpyr(pyr,botlev+1,toplev);
+   pyr[botlev].ptr = img.ptr;
+   reduce(pyr,botlev,toplev,rf);
+   expand(pyr,botlev,toplev,ef,0);
+   free_fpyr(pyr,botlev+1,toplev);
+}
+
+getprivlgmotion(filename,xi,yi,nxi,nyi)
+char *filename;
+FVEC *xi,*yi,*nxi,*nyi;
+{
+/* x,y of img1 followed by x,y of img 2 are read from file. */
+
+   FILE *stream;
+   int i,points;
+
+
+   if ((stream=fopen(filename,"r")) == NULL) {
+      fprintf(stderr,"getprivlgmotion: Couldn't open filter file %s\n",
+                                       filename);
+      exit(-1);
+    }
+
+   fscanf(stream,"%d",&points);
+   xi->s = yi->s = nxi->s = nyi->s = points;
+   xi->ptr = (float *) malloc(points*sizeof(float));
+   yi->ptr = (float *) malloc(points*sizeof(float));
+   nxi->ptr = (float *) malloc(points*sizeof(float));
+   nyi->ptr = (float *) malloc(points*sizeof(float));
+
+   for (i=0; i <= points-1; i++) 
+      fscanf(stream,"%f %f %f %f",xi->ptr+i,
+                                  yi->ptr+i, nxi->ptr+i, nyi->ptr+i);    
+
+#ifdef DEBUG
+    for (i=0; i <= points-1; i++) {
+      printf("x_%d = %1f, y_%d = %1f, nx_%d = %f, ny_%d = %f\n", i, xi->ptr[i],
+         i, yi->ptr[i], i, nxi->ptr[i], i, nyi->ptr[i]);
+    }
+#endif
+}
+
+
+
+#define ITERATIONS 60
+#define SOR 1.4
+
+membrane(arr,lev)
+FIMAGE arr;
+int lev;
+{
+  BIMAGE fix;
+  float **parr=arr.ptr;
+  float c1=1.0-SOR, c2=SOR/4.0,rij;
+  int cntr,i,j;
+
+  fix.h=arr.h; fix.w=arr.w;
+  alloc_bimage(&fix);
+  bset(fix,1);
+  for (i=0; i<fix.h; i++)
+    for (j=0; j<fix.w; j++)
+      if (parr[i][j]==0.0) fix.ptr[i][j]=0;
+
+  for (cntr=0; cntr < ITERATIONS; cntr++)
+  for (i=1; i<fix.h-1; i++)
+    for (j=1; j<fix.w-1; j++) 
+      if (fix.ptr[i][j]==0) {
+       rij = parr[i-1][j] + parr[i+1][j] + parr[i][j-1] + parr[i][j+1];
+       parr[i][j] = parr[i][j]*c1 + c2*rij;
+      }
+
+  free_bimage(fix);
+}
+
+
+bset(image,c)
+BIMAGE image;
+byte c;
+{
+   register byte *p,*fp;
+   register byte **img=image.ptr,**fin;
+
+   for (fin=img+image.h; img < fin; img++)
+     for (p= *img, fp=p+image.w; p < fp; *p++ = c)
+       ;
+}
+

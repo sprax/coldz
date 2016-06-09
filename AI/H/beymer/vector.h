@@ -1,0 +1,2 @@
+float *make_vector();
+

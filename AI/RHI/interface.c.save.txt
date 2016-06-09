@@ -1,0 +1,644 @@
+/***************************************************************************
+ *
+ * library interface linking Sarnoff code with my vision library
+ *
+ * David Beymer
+ * February, 1993
+ *
+ */
+
+#include <stdio.h>
+#include "image.h"		/* D.Beymer's image definition */
+#include "imgdec.h"		/* their image definition */
+#include "imgmacro.h"
+
+#define LAPLACIAN
+
+int Image_border = 10;
+FILTER rf,ef;
+
+/* good defaults: toplev=4, botlev=0
+ */
+
+mot_lsqconf (dx_arg, dy_arg, conf_arg, img1_arg, img2_arg, toplev, botlev)
+image_t *dx_arg, *dy_arg, *conf_arg, *img1_arg, *img2_arg;
+int toplev, botlev;
+{
+   char *c;
+   char filtfile[MAX_STR_LEN],file[MAX_STR_LEN];
+   FPYR pyr1,pyr2,dx,dy,conf;
+   FIMAGE img1,img2;
+   int lev,finlev=0;
+
+   strcpy(filtfile,DEFAULT_PYR_FILTER);	/* default filter */
+   getpyrfilters(filtfile,&rf,&ef);
+   img1.w = img1_arg->width;
+   img1.h = img1_arg->height;
+   alloc_fimage (&img1);
+   image2sarnoff_f (img1, img1_arg);
+   img2.w = img2_arg->width;
+   img2.h = img2_arg->height;
+   alloc_fimage (&img2);
+   image2sarnoff_f (img2, img2_arg);
+   if (img1.w != img2.w || img1.h != img2.h) {
+     fprintf(stderr,"mot_lsqconf: image size mismatch\n");
+     exit(-1);
+   }
+/* Set up pyramids for coarse to fine estimation */
+   def_fpyr(pyr1,botlev,img1.w,img1.h);
+   pyr1[botlev].ptr = img1.ptr;
+   def_fpyr(pyr2,botlev,img2.w,img2.h);
+   pyr2[botlev].ptr = img2.ptr;
+#ifdef LAPLACIAN
+   alloc_fpyr(pyr1,botlev+1,toplev+1);
+   alloc_fpyr(pyr2,botlev+1,toplev+1);
+#else
+   alloc_fpyr(pyr1,botlev+1,toplev);
+   alloc_fpyr(pyr2,botlev+1,toplev);
+#endif
+   def_fpyr(dx,botlev,img1.w,img1.h);
+   alloc_fpyr(dx,finlev,toplev);
+   def_fpyr(dy,botlev,img1.w,img1.h);
+   alloc_fpyr(dy,finlev,toplev);
+   def_fpyr(conf,botlev,img1.w,img1.h);
+   alloc_fpyr(conf,finlev,toplev);
+   
+/* coarse to fine motion estimation */
+   coarse_fine(pyr1,pyr2,dx,dy,conf,botlev,finlev,toplev);
+
+   sarnoff_f2image (dx_arg, dx[finlev]);
+   sarnoff_f2image (dy_arg, dy[finlev]);
+   sarnoff_f2image (conf_arg, conf[finlev]);
+   free_fimage (img1);
+   free_fimage (img2);
+#ifdef LAPLACIAN
+   free_fpyr(pyr1,botlev+1,toplev+1);
+   free_fpyr(pyr2,botlev+1,toplev+1);
+#else
+   free_fpyr(pyr1,botlev+1,toplev);
+   free_fpyr(pyr2,botlev+1,toplev);
+#endif
+   free_fpyr(dx,finlev,toplev);
+   free_fpyr(dy,finlev,toplev);
+   free_fpyr(conf,finlev,toplev);
+}
+
+mot_warp (dest_arg, source_arg, dx_arg, dy_arg, scale)
+image_t *dest_arg, *source_arg, *dx_arg, *dy_arg;
+float scale;
+{
+  image_t *tmp;
+  FIMAGE in, out, dx, dy;
+
+  in.w = source_arg->width;	in.h = source_arg->height;
+  alloc_fimage (&in);
+  image2sarnoff_f (in, source_arg);
+  dx.w = dx_arg->width;		dx.h = dx_arg->height;
+  alloc_fimage (&dx);
+  image2sarnoff_f (dx, dx_arg);
+  dy.w = dy_arg->width;		dy.h = dy_arg->height;
+  alloc_fimage (&dy);
+  image2sarnoff_f (dy, dy_arg);
+  out.w = in.w;  out.h = in.h;   alloc_fimage(&out);
+
+  warp (in, out, dx, dy, scale);
+
+  switch (dest_arg->type) {
+  case IMG_U8BIT:
+    tmp = allocate_image (dest_arg->width, dest_arg->height, IMG_FLOAT);
+    sarnoff_f2image (tmp, out);
+    fix_image (dest_arg, tmp);
+    deallocate_image (tmp);
+    break;
+  case IMG_FLOAT:
+    sarnoff_f2image (dest_arg, out);
+    break;
+  }
+  free_fimage (in);
+  free_fimage (out);
+  free_fimage (dx);
+  free_fimage (dy);
+}
+
+warp(in,out,vx,vy,scale)
+FIMAGE in,out,vx,vy;
+float scale;
+{
+   register float **p=in.ptr, **q=out.ptr, **dx=vx.ptr, **dy=vy.ptr;
+   int x1,y1,x2,y2,w=in.w-1,h=in.h-1,i,j;
+   float x,y,xfrac,yfrac,y1val,y2val;
+
+   reflect(in,3,3);
+   for (j=0; j < out.h; j++)
+     for (i=0; i < out.w; i++) {
+       x = i + scale*dx[j][i];
+       y = j + scale*dy[j][i];
+       x1 = (int) floor(x);
+       y1 = (int) floor(y);
+       xfrac = x - x1;
+       yfrac = y - y1;
+       x1 = MAX(0,MIN(w,x1));  x2 = x1 + 1;
+       y1 = MAX(0,MIN(h,y1));  y2 = y1 + 1;
+       y1val = p[y1][x1] + (p[y1][x2] - p[y1][x1])*xfrac;
+       y2val = p[y2][x1] + (p[y2][x2] - p[y2][x1])*xfrac;
+       q[j][i] = y1val + yfrac*(y2val - y1val);;
+     }
+}
+
+
+#define NBLUR	1	/* Number of smoothing levels */
+#define LIMIT		/* limit residual velocities (only gradient method) */
+#define EXTEND
+
+coarse_fine(pyr1,pyr2,dx,dy,conf,botlev,finlev,toplev)
+FPYR pyr1,pyr2,dx,dy,conf;
+int botlev,finlev,toplev;
+{
+   FIMAGE warped;
+   int lev;
+   extern FILTER rf,ef;
+   char fname[80];
+
+/* Construct pyramids */
+#ifdef LAPLACIAN
+   reduce(pyr1,botlev,toplev+1,rf);
+   reduce(pyr2,botlev,toplev+1,rf);
+   expand(pyr1,botlev,toplev+1,ef,-1);
+   expand(pyr2,botlev,toplev+1,ef,-1);
+#else
+   reduce(pyr1,botlev,toplev,rf);
+   reduce(pyr2,botlev,toplev,rf);
+#endif
+
+/* Start coarse to fine motion estimation */
+   for (lev=toplev; lev >= finlev; lev--) {
+#ifdef DEBUG
+     printf("Estimating velocities on level %d\n",lev);
+     fprintf(stderr,"Estimating velocities on level %d\n",lev);
+#endif
+     if (lev != toplev) {	/* expand previous levels velocity estimate */
+       fmultiply(dx[lev+1],2.0);
+       fmultiply(dy[lev+1],2.0);
+       expand(dx,lev,lev+1,ef,0);
+       expand(dy,lev,lev+1,ef,0);
+     } else {
+       fset(dx[lev],0.0);
+       fset(dy[lev],0.0);
+     }
+     warped.w = pyr1[lev].w; warped.h = pyr1[lev].h; alloc_fimage(&warped);
+     warp(pyr1[lev],warped,dx[lev],dy[lev],-1.0);
+     lsq_lsqgrad_fast(warped,pyr2[lev],dx[lev],dy[lev],conf[lev]);
+     if (lev != toplev) {	/* add in previous estimates to current */
+       expand(dx,lev,lev+1,ef,1);
+       expand(dy,lev,lev+1,ef,1);
+     }
+/* Blur velocity fields */
+     blur(dx[lev],NBLUR);
+     blur(dy[lev],NBLUR);
+/* Write out flow fields and confidence */
+/*
+     sprintf(fname,"dx_%d.float",lev);
+     write_fimage(fname,dx[lev]);
+     sprintf(fname,"dy_%d.float",lev);
+     write_fimage(fname,dy[lev]);
+     sprintf(fname,"conf_%d.float",lev);
+     write_fimage(fname,conf[lev]);
+*/
+     free_fimage(warped);
+   }
+}
+
+
+static float **W;
+static float *gama;
+static float *lambda;
+static float **phi;
+
+#define HALF_WINDOW (2)
+#define WINDOW (2*HALF_WINDOW+1)
+
+lsq_lsqgrad_fast(image1,image2,vx,vy,conf)
+FIMAGE image1,image2,vx,vy,conf;
+{
+   FIMAGE Gx,Gy,Gt;
+   float **dx=vx.ptr,**dy=vy.ptr,**c=conf.ptr;
+   float *fxx[WINDOW],*fxy[WINDOW],*fyy[WINDOW],*fxt[WINDOW],*fyt[WINDOW];
+   float *oldxx,*oldxy,*oldyy,*oldxt,*oldyt;
+   float *newxx,*newxy,*newyy,*newxt,*newyt,*Fxx,*Fxy,*Fyy,*Fxt,*Fyt;
+   float alpha_max,alpha_min;
+   float **alloc_farray(),*alloc_fvector(),*_alloc_fvector();
+   int row;
+   int w=image1.w,h=image1.h,x,y,xx,yy,i,j,k,n,n1,nrot;
+   char file[MAX_STR_LEN];
+
+/* Reflect images */
+   reflect(image1,Image_border,3);
+   reflect(image2,Image_border,3);
+/* Zero out border on vx and vy and confidence */
+   fset(vx,0.0);
+   fset(vy,0.0);
+   fset(conf,0.0);
+
+/* Allocate needed vectors and matrices */
+   gama = alloc_fvector(1,2);
+   W = alloc_farray(1,2,1,2);
+   phi = alloc_farray(1,2,1,2);
+   lambda = alloc_fvector(1,2);
+   for (j=0; j < WINDOW; j++) {
+     fxx[j] = _alloc_fvector(w);
+     fxy[j] = _alloc_fvector(w);
+     fyy[j] = _alloc_fvector(w);
+     fxt[j] = _alloc_fvector(w);
+     fyt[j] = _alloc_fvector(w);
+   }
+   newxx = _alloc_fvector(w);   Fxx = _alloc_fvector(w);
+   newxy = _alloc_fvector(w);   Fxy = _alloc_fvector(w);
+   newyy = _alloc_fvector(w);   Fyy = _alloc_fvector(w);
+   newxt = _alloc_fvector(w);   Fxt = _alloc_fvector(w);
+   newyt = _alloc_fvector(w);   Fyt = _alloc_fvector(w);
+
+/* Gradient Estimation */
+   Gx.w = Gy.w = Gt.w = w;  Gx.h = Gy.h = Gt.h = h;
+   alloc_fimage(&Gx);  alloc_fimage(&Gy);  alloc_fimage(&Gt);
+   gradient_estimation(image1,image2,Gx,Gy,Gt);
+
+/* Start motion estimation */
+
+   for (i=0; i < w; i++)
+     Fxx[i] = Fxy[i] = Fyy[i] = Fxt[i] = Fyt[i] = 0.0;
+   for (j=0; j < WINDOW-1; j++) {
+     row_lsqgrad_sum(Gx,Gy,Gt,j,fxx[j],fxy[j],fyy[j],fxt[j],fyt[j]);
+     for (i=HALF_WINDOW; i < w-HALF_WINDOW; i++) {
+       Fxx[i] += fxx[j][i];
+       Fxy[i] += fxy[j][i];
+       Fyy[i] += fyy[j][i];
+       Fxt[i] += fxt[j][i];
+       Fyt[i] += fyt[j][i];
+     }
+   }
+   row = WINDOW - 1;
+   for (i=0; i < w; i++)
+     fxx[row][i] = fxy[row][i] = fyy[row][i] = fxt[row][i] = fyt[row][i] = 0.0;
+
+   for (y=HALF_WINDOW; y < h-HALF_WINDOW; y++) {
+     row_lsqgrad_sum(Gx,Gy,Gt,y+HALF_WINDOW,newxx,newxy,newyy,newxt,newyt);
+     oldxx = fxx[row];  oldxy = fxy[row];  oldyy = fyy[row];
+     oldxt = fxt[row];  oldyt = fyt[row];
+     for (x=HALF_WINDOW; x < w-HALF_WINDOW; x++) {
+#ifdef DEBUG 
+       printf("\n**** Starting computation for Point: %d,%d ****\n",x,y);
+#endif
+
+/* Compute W and gama */
+       W[1][1] = Fxx[x] += (newxx[x] - oldxx[x]);
+       W[2][1] = Fxy[x] += (newxy[x] - oldxy[x]);
+       W[1][2] = W[2][1];
+       W[2][2] = Fyy[x] += (newyy[x] - oldyy[x]);
+
+       gama[1] = Fxt[x] += (newxt[x] - oldxt[x]);
+       gama[2] = Fyt[x] += (newyt[x] - oldyt[x]);
+
+       compute_velocities(&dx[y][x],&dy[y][x],&c[y][x],W,gama,lambda,phi);
+
+#ifdef LIMIT
+       if (ABS(dx[y][x]) > HALF_WINDOW) {
+         dx[y][x] = SIGN(HALF_WINDOW,dx[y][x]);
+       }
+       if (ABS(dy[y][x]) > HALF_WINDOW) {
+         dy[y][x] = SIGN(HALF_WINDOW,dy[y][x]);
+       }
+#endif
+#ifdef DEBUG 
+       if (c[y][x] < 0.0) {
+         fprintf(stderr,"Negative confidence value at location (%d,%d)\n",x,y);
+         printwgama();
+       }
+#endif
+
+     }
+     fxx[row] = newxx; newxx = oldxx;
+     fxy[row] = newxy; newxy = oldxy;
+     fyy[row] = newyy; newyy = oldyy;
+     fxt[row] = newxt; newxt = oldxt;
+     fyt[row] = newyt; newyt = oldyt;
+     row++;  row %= WINDOW;
+   }
+
+/* Free up gradient images */
+   free_fimage(Gt);  free_fimage(Gy);  free_fimage(Gx);
+
+/* Free vectors and matrices */
+   _free_fvector(Fyt);   _free_fvector(newyt);
+   _free_fvector(Fxt);   _free_fvector(newxt);
+   _free_fvector(Fyy);   _free_fvector(newyy);
+   _free_fvector(Fxy);   _free_fvector(newxy);
+   _free_fvector(Fxx);   _free_fvector(newxx);
+   for (j=0; j < WINDOW; j++) {
+     _free_fvector(fyt[j]);
+     _free_fvector(fxt[j]);
+     _free_fvector(fyy[j]);
+     _free_fvector(fxy[j]);
+     _free_fvector(fxx[j]);
+   }
+   free_fvector(lambda,1,2);
+   free_farray(phi,1,2,1,2);
+   free_farray(W,1,2,1,2);
+   free_fvector(gama,1,2);
+
+#ifdef EXTEND
+/* Extend velocity fields */
+   extend(vx,HALF_WINDOW);
+   extend(vy,HALF_WINDOW);
+   extend(conf,HALF_WINDOW);
+#endif
+   fdivide(conf,(float) (WINDOW*WINDOW));
+}
+
+
+row_lsqgrad_sum(Gx,Gy,Gt,row,fxx,fxy,fyy,fxt,fyt)
+FIMAGE Gx,Gy,Gt;
+int row;
+register float *fxx,*fxy,*fyy,*fxt,*fyt;
+{
+   float **gx=Gx.ptr,**gy=Gy.ptr,**gt=Gt.ptr;
+   int x,xx,col;
+   int w=Gx.w,h=Gx.h;
+   float gxx[WINDOW],gxy[WINDOW],gyy[WINDOW],gxt[WINDOW],gyt[WINDOW];
+   float Fx,Fy,Ft;
+
+   fxx += HALF_WINDOW;  fxy += HALF_WINDOW;  fyy += HALF_WINDOW;
+   fxt += HALF_WINDOW;  fyt += HALF_WINDOW;
+   *fxx = *fxy = *fyy = *fxt = *fyt = 0.0;
+   for (x=0; x < WINDOW; x++) {
+     Fx = gx[row][x];
+     Fy = gy[row][x];
+     Ft = gt[row][x];
+     *fxx += gxx[x] = Fx*Fx;
+     *fxy += gxy[x] = Fx*Fy;
+     *fyy += gyy[x] = Fy*Fy;
+     *fxt += gxt[x] = Fx*Ft;
+     *fyt += gyt[x] = Fy*Ft;
+   }
+   col = 0;
+   fxx++; fxy++; fyy++; fxt++; fyt++;
+   for (x=HALF_WINDOW+1,xx=x+HALF_WINDOW; x < w-HALF_WINDOW; x++,xx++) {
+     *fxx = *(fxx-1) - gxx[col]; 
+     *fxy = *(fxy-1) - gxy[col]; 
+     *fyy = *(fyy-1) - gyy[col]; 
+     *fxt = *(fxt-1) - gxt[col]; 
+     *fyt = *(fyt-1) - gyt[col]; 
+     Fx = gx[row][xx];
+     Fy = gy[row][xx];
+     Ft = gt[row][xx];
+     *fxx++ += gxx[col] = Fx*Fx; 
+     *fxy++ += gxy[col] = Fx*Fy; 
+     *fyy++ += gyy[col] = Fy*Fy; 
+     *fxt++ += gxt[col] = Fx*Ft; 
+     *fyt++ += gyt[col] = Fy*Ft;
+     col++;  col %= WINDOW; 
+   }
+}
+
+
+       
+#define LSQ_GRADIENTS
+gradient_estimation(image1,image2,Gx,Gy,Gt)
+FIMAGE image1,image2;
+FIMAGE Gx,Gy,Gt;
+{
+   float **img1=image1.ptr,**img2=image2.ptr;
+   float **gx=Gx.ptr, **gy=Gy.ptr, **gt=Gt.ptr;
+   int w=image1.w, h=image2.h, x,y;
+   FIMAGE Scr;
+   float **scr;
+
+   Scr.w = w;  Scr.h = h;  alloc_fimage(&Scr);  scr = Scr.ptr; 
+   fsubtract_img(Scr,image1,image2);
+   reflect(Scr,3,3);
+   for (y=0; y < h; y++)
+     for (x=0; x < w; x++) {
+#ifdef LSQ_GRADIENTS
+       gx[y][x] = (img2[y][x+1] - img2[y][x-1] + 
+                   img1[y][x+1] - img1[y][x-1])/4.0;
+       gy[y][x] = (img2[y+1][x] - img2[y-1][x] + 
+                   img1[y+1][x] - img1[y-1][x])/4.0;
+       gt[y][x] = (scr[y][x-1] + scr[y][x+1] + scr[y][x] +
+                   scr[y-1][x] + scr[y+1][x])/5.0;
+#else
+
+       gx[y][x] = (img2[y][x+1] - img2[y][x-1])/2.0;
+       gy[y][x] = (img2[y+1][x] - img2[y-1][x])/2.0;
+       gt[y][x] = scr[y][x];
+#endif
+     }
+   free_fimage(Scr);
+}
+
+
+
+blur(img,nlev)
+FIMAGE img;
+int nlev;
+{
+   FPYR pyr;
+   int botlev=0,toplev=nlev;
+   extern FILTER rf,ef;
+
+   def_fpyr(pyr,botlev,img.w,img.h); 
+   alloc_fpyr(pyr,botlev+1,toplev);
+   pyr[botlev].ptr = img.ptr;
+   reduce(pyr,botlev,toplev,rf);
+   expand(pyr,botlev,toplev,ef,0);
+   free_fpyr(pyr,botlev+1,toplev);
+}
+
+
+extend(img,n)
+FIMAGE img;
+int n;
+{
+   register float **p=img.ptr;
+   register int l=0,r=img.w-1,b=0,t=img.h-1;
+   register int i,j;
+
+   for (j=0; j < img.h; j++)
+     for (i=0; i < n; i++) {
+       p[j][i] = p[j][n];
+       p[j][r-i] = p[j][r-n];
+     }
+   for (j=0; j < n; j++)
+     for (i=0; i < img.w; i++) {
+       p[j][i] = p[n][i];
+       p[t-j][i] = p[t-n][i];
+     }
+}
+
+
+#define SMALL 5
+compute_velocities(vx,vy,conf,W,gama,lambda,phi)
+float *vx,*vy,*conf;
+float **W,*gama,*lambda,**phi;
+{
+  float alpha_max,alpha_min;
+  int nrot;
+
+#ifdef DEBUG
+  printwgama();
+#endif
+
+/* Get eigenvectors and eigenvalues of W */
+  eigens(W,lambda,phi);
+
+#ifdef DEBUG
+  printeigens();
+#endif
+
+/* Compute confidence */
+  *conf = lambda[2];
+/* Compute velocities */
+  if (lambda[1] > 100*lambda[2] && lambda[1] > SMALL) {/* Singular point */
+    alpha_max = (phi[1][1]*gama[1] + phi[2][1]*gama[2])/lambda[1];
+    *vx = alpha_max*phi[1][1];
+    *vy = alpha_max*phi[2][1];
+#ifdef DEBUG
+    printf("Singular point: alpha_max=%f\n",alpha_max);
+    printf("Velocity vector: %8.4f  %8.4f\n",*vx,*vy);
+#endif
+  } else if (lambda[1] > SMALL) {	/* Non-singular point */
+    alpha_max = (phi[1][1]*gama[1] + phi[2][1]*gama[2])/lambda[1];
+    alpha_min = (phi[1][2]*gama[1] + phi[2][2]*gama[2])/lambda[2];
+    *vx = alpha_max*phi[1][1] + alpha_min*phi[1][2];
+    *vy = alpha_max*phi[2][1] + alpha_min*phi[2][2];
+#ifdef DEBUG
+    printf("Non-singular point: alpha_max=%f alpha_min=%f\n",
+                   alpha_max,alpha_min);
+    printf("Velocity vector: %8.4f  %8.4f\n",*vx,*vy);
+#endif
+  } else {
+    *vx = 0.0;
+    *vy = 0.0;
+#ifdef DEBUG
+    printf("Singular point: W=0\n");
+#endif
+  }
+}
+
+printwgama()	/* Write W matrix and gama to stdout */
+{
+
+   printf("W matrix: %10.4f   %10.4f\n          %10.4f   %10.4f\n",
+            W[1][1],W[1][2],W[2][1],W[2][2]);
+   printf("Gamma:    %10.4f   %10.4f\n",gama[1],gama[2]);
+}
+
+printeigens()	/* Write eigenvalues and eigenvectors to stdout */
+{
+   printf("Eigenvalues: %10.4f  %10.4f\n",lambda[1],lambda[2]);
+   printf("Eigenvectors:\n");
+   printf("   %10.4f   %10.4f\n",phi[1][1],phi[2][1]);
+   printf("   %10.4f   %10.4f\n",phi[1][2],phi[2][2]);
+}
+
+
+#define VERY_SMALL 1e-10
+
+eigens(W,lambda,phi)	/* only for real symmetric 2x2 matrices */
+float **W,*lambda,**phi;
+{
+   float a=W[1][1],b=W[2][1],c=W[2][2];
+/*   float detW = a*c - b*b;*/
+   float scale,sum,diff,disc,v1,v2;
+
+   sum = a+c; diff = a-c;
+   lambda[1] = lambda[2] = sum/2.0;
+/*   disc = sum*sum - 4*detW;*/
+   disc = diff*diff + 4*b*b;
+   if (disc < 0.0) {		/* For a real symmetric 2x2 matrix disc must*/
+     fprintf(stderr,"eigens: negative discriminant\n");	/* be nonnegative */
+     fprintf(stderr,"a=%f  b=%f  c=%f\n",a,b,c);
+     exit(-1);
+   }
+   disc = sqrt(disc)/2.0;
+   lambda[1] += disc; 		/* larger eigenvalue  */
+   lambda[2] -= disc;		/* smaller eigenvalue */
+   if (fabs(b) < VERY_SMALL) {
+     if (a >= c) {
+       phi[1][1] = 1.0;   phi[2][1] = 0.0;
+       phi[1][2] = 0.0;   phi[2][2] = 1.0;
+     } else {
+      phi[1][1] = 0.0;   phi[2][1] = 1.0;
+      phi[1][2] = 1.0;   phi[2][2] = 0.0;
+     }
+   } else {
+      if (fabs(lambda[1]-a) > fabs(lambda[2]-a)) {
+        v1 = b/(lambda[1]-a);   v2 = 1.0;
+        scale = 1/sqrt(v1*v1+v2*v2);
+        phi[1][1] = v1*scale;   phi[2][1] = v2*scale;
+        phi[1][2] = phi[2][1];   phi[2][2] = -phi[1][1];
+      } else {
+        v1 = b/(lambda[2]-a);   v2 = 1.0;
+        scale = 1/sqrt(v1*v1+v2*v2);
+        phi[1][2] = v1*scale;   phi[2][2] = v2*scale;
+        phi[1][1] = phi[2][2];   phi[2][1] = -phi[1][2];
+      }
+   }
+}
+
+/****************************************************************************
+ *
+ * conversion between internal image formats
+ *
+ */
+
+image2sarnoff_f (fimg, image)
+FIMAGE fimg;
+image_t *image;
+{
+  u_char *uchar_ptr;
+  int x, y;
+  float *fimg_ptr, *float_ptr;
+
+  switch (image->type) {
+  case IMG_U8BIT:
+    for (y = 0; y < image->height; y++) {
+      uchar_ptr = (u_char *) image->image[y];
+      fimg_ptr = (float *) fimg.ptr[y];
+      for (x = 0; x < image->width; x++) {
+	*fimg_ptr++ = (float) *uchar_ptr++;
+      }
+    }
+    break;
+  case IMG_FLOAT:
+    for (y = 0; y < image->height; y++) {
+      float_ptr = (float *) image->image[y];
+      fimg_ptr = (float *) fimg.ptr[y];
+      for (x = 0; x < image->width; x++) {
+	*fimg_ptr++ = *float_ptr++;
+      }
+    }
+    break;
+  default:
+    fprintf (stderr, "image2sarnoff_f: unsupported type.\n");
+    break;
+  }
+}
+
+sarnoff_f2image (image, fimg)
+image_t *image;
+FIMAGE fimg;
+{
+  int x, y;
+  float *fimg_ptr, *float_ptr;
+
+  if (image->type != IMG_FLOAT) {
+    fprintf (stderr, "sarnoff_f2image:  image must be of type float.\n");
+  } else {
+    for (y = 0; y < image->height; y++) {
+      float_ptr = (float *) image->image[y];
+      fimg_ptr = (float *) fimg.ptr[y];
+      for (x = 0; x < image->width; x++) {
+	*float_ptr++ = *fimg_ptr++;
+      }
+    }
+  }
+}

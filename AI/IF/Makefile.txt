@@ -1,0 +1,61 @@
+#
+# if/o.iris/makefile	S.R.Lines    93.5.22
+#	image file format converters, written by David Beymer,
+#	Paul Haeberli, Stephen Lines, et al.
+  MARC=		${ARCH}
+  MALD=		${HOME}/bin/${MARC}/
+  CFLAGS=	-O4
+  CPPFLAGS=	-D${MARC} -I../../h
+  LDFLAGS=
+  INSTALL=	ln
+  RM=		rm -f
+##Choose one CC here, or override using make -e, make CC=acc, etc.
+# CC=		acc
+# CC=		/usr/ucb/cc -D_NO_PROTO
+  CC=		gcc -Wall
+
+####	Libraries: order is important, and sadlib *should* die.
+SADLIB=	-L$(MALD) -lvision -lpixrect -lgutil -limage -lgl_s -lun -lm
+SGILIB=	-L$(MALD) -lgutil -limage -lgl_s -lun -lm
+SPRLIB=	-L$(MALD) -lvision -lpixrect -lun -lmath -lnum -lm
+
+####	By library reqs: SGI-native, Sun-PixRect, and hybrid/union ESAD.
+ESAD=	sarn2sgi sgi2sun sun2sgi ## The name says it all.
+ESGI=	ssgi sarn-sgi sgi-sun sun-sgi
+ESPR=	any2grok any2sarn any2ras any2raw any2sgi any2vis \
+	grok2ras grok2raw grok2vis \
+	jlm2ps \
+	ras2grok ras2pnm ras2ps ras2raw ras2vis \
+	raw2ras rgb2ppm
+
+all:	ssgi ## sun ## ssg sgi
+sgi:	$(ESGI) $(ESAD)
+sun:	$(ESPR)
+
+ssg:	ssg.c
+	gcc -Wall -ansi $(CPPFLAGS) -g $? $(SGILIB) -o $@
+	
+
+$(ESAD): $$@.c	## sgi AND sun libs -- this should die.
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $@.c $(SADLIB) -o $@
+	-( $(RM) $(MALD)$@ )
+	-( $(INSTALL) $@ $(MALD) )
+
+$(ESGI): $$@.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $? $(SGILIB) -o $@
+	-( $(RM) $(MALD)$@ )
+	-( $(INSTALL) $@ $(MALD) )
+
+$(ESPR): $$@.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $@.c $(SPRLIB) -o $@
+	-( $(RM) $(MALD)$@ )
+	-( $(INSTALL) $@ $(MALD) )
+
+.c.o:
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+$(ESAD):	$(MALD)libimage.a $(MALD)libvision.a
+$(ESGI):	$(MALD)libimage.a
+$(ESPR):	$(MALD)libvision.a
+
+

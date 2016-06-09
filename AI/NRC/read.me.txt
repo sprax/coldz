@@ -1,0 +1,89 @@
+                        NUMERICAL RECIPES SOFTWARE
+                               P.O. Box 243
+                           Cambridge, MA  02238
+
+
+Dear C Enthusiast:
+
+This diskette is a beta-test copy of the Numerical Recipes in C diskette,
+designed to accompany our forthcoming book NUMERICAL RECIPES IN C, to
+be published in Spring, 1988, by Cambridge University Press.  We are
+sending this to you free, and with no obligation, but also without warranty
+of any kind.  We would appreciate getting your feedback.
+
+Most of you have written us as readers of the existing NUMERICAL RECIPES
+book, which contains programs in FORTRAN and Pascal.  You will find that
+the C programs on this disk are algorithmically close to their siblings
+in the other languages.  You should be able to use the existing book to
+get started with these C versions.  Eventually, you will probably want
+to get a copy of the C book, since it details the occasional language-
+specific differences and contains some useful appendices.
+
+If by any chance you do not already have a copy of NUMERICAL RECIPES,
+and you want to use this diskette effectively, you will probably have to
+get a hold of one.  Since, ultimately, you will want to get NUMERICAL 
+RECIPES IN C, rather than the current NUMERICAL RECIPES, we recommend that
+you try to find a copy of the current version in your local library, or
+borrow one from a friend.  If all else fails, you can buy a copy from
+Cambridge University Press (800-431-1580 or 914-235-0300).  Who knows,
+perhaps it will teach you to like FORTRAN!
+
+NUMERICAL RECIPES IN C will have a twenty page discussion of programming
+conventions for scientific programming in C.  Among the matters discussed
+is that of allocating vectors and matrices in C, not necessarily with
+a range of indices starting with zero.  Our view is that some algorithms
+"naturally" go from 1 to N, not from 0 to N-1.  For this reason, we
+provide on this disk a set of utility routines NRUTIL.C, for allocating
+and deallocating vectors and matrices with arbitrary index ranges.  These
+are used extensively in the Recipes on this disk.  You will need to
+figure them out (unfortunately without the aid of the book for now) in
+order to use this disk effectively.
+
+Here is an example of creating, and then using, a matrix with row
+index running from 1 to 13, and with column index running from 1 to 9:
+
+	#include "nrutil.c"   /* or, just declare float **matrix(); */
+	float **a;
+	a=matrix(1,13,1,9);
+	...
+	a[3][5]=...
+	...+a[2][9]/3.0...
+	someroutine(a,...);
+	...
+	free_matrix(a,1,13,1,9);
+
+Notice that we ALWAYS use a pointer-to-array-of-pointers-to-rows structure
+for matrices, NEVER a fixed dimension structure like "float a[13][9]".
+There are a number of advantages to this described in the book.  One
+key advantage is that the Recipes do not need to know the physical dimensions
+of matrices that are passed to them.
+
+Here is an example of how to convert a fixed dimension matrix to a
+pointer-to-array-of-pointers structure:
+
+	float a[13][9],**aa;
+	int i;
+	aa=(float **) malloc((unsigned) 13*sizeof(float*));
+	for(i=0;i<=12;i++) aa[i]=a[i];
+
+You then pass the pointer aa to any Numerical Recipe.  Note, however,
+that the row index varies from 0 to 12, not 1 to 13.  Since many
+recipes expect the latter choice, it is better to use the utility
+matrix() as shown above.
+
+The file NR.H is a header file for all the Recipes.  The file
+COMPLEX.C contains utilities that are used by a few Recipes for complex
+arithmetic.
+
+We have included a small selection of driver programs from the NUMERICAL
+RECIPES EXAMPLE BOOK (C), just to show how some of the Recipes are
+used.  These driver routines are in the alpha-test form, and they may
+undergo considerable change before they are released.  Use them with
+caution.
+
+Good luck!  And let us hear from you.
+
+Sincerely,
+
+NUMERICAL RECIPES SOFTWARE
+

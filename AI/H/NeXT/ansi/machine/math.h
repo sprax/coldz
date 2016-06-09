@@ -1,0 +1,1 @@
+#ifndef _ANSI_MACHINE_MATH_H#define _ANSI_MACHINE_MATH_H/* * ARCH_INCLUDE.h provides a facility for including architecture * specific files without enumerating every possible architecture * in this file. */#include <architecture/ARCH_INCLUDE.h>#include ARCH_INCLUDE(ansi/, math.h)#endif /* _ANSI_MACHINE_MATH_H */

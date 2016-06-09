@@ -1,0 +1,312 @@
+#
+# $(TOP)/src/Makefile    S.R.Lines    93-03-26
+# linked to ../o.*/Makefile, $(PROJ).make.$(MM), etc.
+#
+#------ SYSTEM, ENVIRONMENT, COMMANDS & OPTIONS -------
+  MM=		sun4
+  MFGR=		SUN
+  AR=		ar
+  ARFLAGS=	ruv
+  CC=		cc
+# CFLAGS=	-O4 -fsingle -DSUN
+  CFLAGS=	-g
+# OPENWINHOME=  /usr/local
+# IFLAGS=	-I$(OPENWINHOME)/include
+  CPPFLAGS=	-D$(MFGR) $(IFLAGS)
+  LDFLAGS=	-g##		THIS TEMPORARY KLUDGE IS FOR SUN MAKE
+  LIBDISPLAY=   -lcurses -ltermlib -lsuntool -lsunwindow -lpixrect
+#------ RULES -------
+#.SUFFIXES:
+#.SUFFIXES: .i $(SUFFIXES)
+
+.c.o:
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<	-o $@
+.o:
+	$(CC) $(CFLAGS) $(LDFLAGS) $<	$(LINKLIBS)	-o $@
+.c.i:
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -E -P $< >!	$@
+#------ DIRECTORIES/ ------- 3-letter-macro values end in /
+# PROJ=	rh
+  TOP=	../
+# SRC=	$(TOP)src/
+  SRC=
+  INC=
+  OBJ=
+  LIB=		
+  DST=	$(HOME)/bin/$(MARC)/
+#------ FILES -------
+HEADERS= $(INC)imgdec.h $(INC)imgmacro.h $(INC)imghdr.h $(INC)profile.h
+
+EXI_C=  info.c oip2nip.c nip2oip.c rdimg.c bsqz.c \
+        cut.c paste.c favg.c \
+        btof.c ftob.c bop.c fop.c \
+        blut.c scale.c gamma.c \
+        canny.c pyr.c dct.c blur.c \
+        warp.c plnwarp.c warpln.c warpln2.c \
+        pix2ps.c getpix.c lsqconf.c \
+        mksin.c mkpln.c asc2b.c fval.c
+EXI_O=	$(EXI_C:.c=.o)
+EXI_E=	$(EXI_O:.o=)
+
+EXM_C=	lsqpln.c rmhdr.c mkhdr.c svd.c
+EXM_O=	$(EXM_C:.c=.o)
+EXM_E=	$(EXM_O:.o=) $(MOTION)
+
+DISP_C=	sho.c shofimg.c shoflow.c seq.c peek.c lut.c cuttool.c
+DISP_O=	$(DISP_C:.c=.o)
+DISP_E=	$(DISP_O:.o=)
+
+EXE_O=	$(EXI_O) $(EXM_O) $(DISP_O)
+EXE_C=	$(EXI_C) $(EXM_C) $(DISP_C)
+EXES=	$(EXI_E) $(EXM_E) $(DISP_E)
+#       bstat.c fstat.c 		## missing functions @@
+#       symbol.c unsymbol.c lsqdeb.c
+#       qtree.c try.c
+#       $(FFT_O) $(OTHER_O) $(MOTION_O)
+
+
+#@@sprax        peektool seq2
+MOTION=         lsqflow lsqpln-old 3ptflow lkflow 6ptprsflow ## lcflow lcalpha 
+ENCODERS=       encode_sprax##@@_sprax
+DECODERS=       decode_sprax##@@_sprax
+COMP=           comp_sprax##@@_sprax
+FFT=		fft_sprax##@@_sprax
+
+RHI_A=	$(LIB)librh.a
+RHI_C=	interface.c
+RHI_O=	$(RHI_C:.c=.o)
+
+IMG_A=	$(LIB)libimg.a 
+IMG_C1=	mmath.c bset.c \
+	bimgio.c fimgio.c limgio.c \
+	simgio.c ftoblib.c stob.c ltob.c \
+	btoflib.c stof.c ltof.c btos.c \
+	ftos.c ltos.c btol.c ftol.c stol.c imgalloc.c \
+	bimgalloc.c fimgalloc.c simgalloc.c \
+	limgalloc.c dimgalloc.c fpyralloc.c \
+	bpyralloc.c qmfpyralloc.c \
+	arralloc.c barralloc.c farralloc.c \
+	sarralloc.c larralloc.c darralloc.c \
+	die.c profile.c redirected.c \
+	filtio.c fileutils.c fimgop.c \
+	hvqmfpyralloc.c fimgimg.c \
+	sstats.c bvstats.c fvstats.c \
+	svstats.c bzrstats.c fzrstats.c szrstats.c
+IMG_C2=	fcopy.c fset.c fclip.c fmse.c \
+	fmsv.c fminmax.c bstats.c fstats.c \
+	bnzrstats.c fnzrstats.c snzrstats.c \
+	getvstats.c getzrstats.c getnzrstats.c \
+	vhist.c bvhist.c fvhist.c svhist.c \
+	zrhist.c szrhist.c nzrhist.c \
+	bnzrhist.c fnzrhist.c snzrhist.c \
+	ratesub.c huffman.c \
+	reflect.c qmfredexp.c hvqmfredexp.c \
+	redexp.c dblredexp.c fsdlap.c \
+	filtsub.c kernel.c \
+	fdcts.c ffts.c getblock.c putblock.c \
+	getvector.c putvector.c vqio.c \
+	seqio.c svdlib.c eigens2x2.c jacobi.c eigsrt.c \
+	ludcmp.c lubksb.c blkmot.c \
+	mathtls.c roi.c 
+#	bredexp.c sqmfpyralloc.c bqmfpyralloc.c spyralloc.c
+
+IMG_O1=	$(IMG_C1:.c=.o)
+IMG_O2=	$(IMG_C2:.c=.o)
+
+COMP_A=	$(LIB)libcomp.a
+COMP_C=	uqnt.c ucoders.c utqnt.c utcoders.c \
+	laputq.c qmfsub.c dctimg.c \
+	fdctsub.c ## squeezer.c
+COMP_O=	$(COMP_C:.c=.o)
+
+MOT_A=	$(LIB)libmot.a
+MOT_C=	lsqsub.c warps.c warpers.c trans_est.c \
+	affine_est.c lkflowlib.c ## sim_est.c
+MOT_O=	$(MOT_C:.c=.o)
+
+ENC_A=	$(LIB)libenc.a
+ENC_C=	3encode.c 2encode.c 1encode.c \
+	0encode.c encsub.c
+ENC_O=	$(ENC_C:.c=.o)
+
+DEC_A=	$(LIB)libdec.a
+DEC_C=	3decode.c 2decode.c 1decode.c \
+	0decode.c decsub.c
+DEC_O=	$(DEC_C:.c=.o)
+
+######	LEFTOVERS
+OLD_C=	lsqaffflow.c lsqplnseq.c
+OLD_O=	$(OLD_C:.c=.o)
+
+  OBJL= $(IMG_O1) $(IMG_O2) $(COMP_O) $(MOT_O) ## $(ENC_O) $(DEC_O)
+  SRCL=	$(IMG_C2) $(IMG_C2) $(COMP_C) $(MOT_C) ## $(ENC_C) $(DEC_C)
+  OBJS=	$(RHI_O)  $(OBJL)   $(EXE_O)  $(OLD_O)
+  SRCS=	$(RHI_C)  $(SRCL)   $(EXE_C)  
+  LIBS= $(RHI_A)  $(IMG_A)  $(COMP_A) $(MOT_A) ## $(ENC_A) $(DEC_A)
+  TARG=	$(EXES)   $(OBJS)   $(LIBS)
+
+  INSTALL=	$(DST)$(RHI_A) $(DST)$(IMG_A) $(DST)$(COMP_A) $(DST)$(MOT_A)
+
+#------ TARGETS -------
+
+.PRECIOUS: $(IMG_A) $(COMP_A) $(MOT_A) $(ENC_A) $(DEC_A)
+
+all:		lib bin
+lib:		$(LIBS)
+bin:		$(EXI_E) $(EXM_E) $(DISP_E) ## DISP_E is SUN-only (pixrect).
+obj:		$(OBJS)
+#debug:		$(IMG_A) $(COMP_A) $(MOT_A) $(DEC_A) $(ENC_A)
+install:	$(INSTALL)
+
+########@@xxx following rule works for gmake and make, not sgi smake:
+
+$(OBJS):
+#	@echo "	OBJS: ? == $?"
+#	@echo "	OBJS: @ == $@"
+	$(CC) $(CFLAGS) $(CPPFLAGS)	-c $(SRC)$(@F:.o=.c)	-o $@
+
+$(EXI_E): $$@.o $(LIB)libimg.a
+	$(CC) $(LDFLAGS)	$@.o	-L. -limg -lm	-o $@
+
+$(EXM_E): $$@.o $(LIB)libimg.a
+	$(CC) $(LDFLAGS) $@.o	-L. -lmot -limg -lm	-o $@
+#	$(LINK.c) -o $@ $@.o -lmot -limg -lm
+
+$(DISP_E): $$@.o imgdisp.o font.o $(LIB)libimg.a
+#	@echo "	This target seems to depend on Sun /usr/ucb/cc & pixrect:"
+	$(CC) $(CFLAGS) $(LDFLAGS) $@.o imgdisp.o font.o \
+	-L. -limg -lm $(LIBDISPLAY)	-o $@
+
+#$(DISP_O):
+#	cc $(CFLAGS) $(CPPFLAGS) -c $(SRC)$(@F:.o=.c)    -o $@
+
+$(INSTALL):      $(LIBS)	## This KLUDGE is BAD @@
+#	ranlib   $(@F)
+	-(rm -f  $@)
+	ln $(@F) $@
+
+$(RHI_A): $(RHI_O)
+	ar ruv $@ $?
+
+$(IMG_A): $(IMG_O1) $(IMG_O2)
+	@echo "	IMG_A: ? == $?"
+	@echo "	IMG_A: @ == $@"
+	$(AR) $(ARFLAGS) $@ $?
+	ranlib   $@
+
+$(COMP_A): $(COMP_O)
+	$(AR) $(ARFLAGS) $@ $?
+	ranlib   $@
+
+$(MOT_A): $(MOT_O)
+	$(AR) $(ARFLAGS) $@ $?
+	ranlib   $@
+
+$(DEC_A): $(DEC_O)
+	ar rv $@ $?
+	ranlib   $@
+
+$(ENC_A): $(ENC_O)
+	ar rv $@ $?
+	ranlib   $@
+
+mmmm:
+	@echo " "
+#	@echo "	OBJS == $(OBJS)"
+#	@echo "	SRCS == $(SRCS)"
+	@echo "	LIBS == $(LIBS)"
+	@echo " "
+
+#
+#$(COMP):       $$@.o lib/$(LIB)/libcomp.a lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o -lcomp -limg -lm
+#
+#$(ENCODERS):   $$@.o lib/$(LIB)/libenc.a lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o -lenc -lcomp -limg -lm
+#
+#$(DECODERS):   $$@.o lib/$(LIB)/libdec.a lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o -ldec -lcomp -limg -lm
+#
+#$(MOTION):     $$@.o lib/$(LIB)/libmot.a lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o -lmot -limg -lm
+#
+#$(FFTS):	$$@.o lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o -limg -lm -lF77 -lI77 -lU77
+#
+#try:           $$@.o lib/$(LIB)/libmot.a lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o -lmot -limg -lm
+#
+#
+#symbol:                $$@.o sym.o lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o sym.o -limg -lm
+#
+#unsymbol:      $$@.o sym.o lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o sym.o -limg -lm
+#
+#lsqdeb:                $$@.o qtree_redexp.o  lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o qtree_redexp.o -limg -lm
+#
+#qtree:         $$@.o qtree_redexp.o lib/$(LIB)/libimg.a
+#               $(LINK.c) -o $@ $@.o qtree_redexp.o -limg -lm
+#
+# added for interface to my vision library -David Beymer.
+#
+#
+
+clean:			
+	@-(rm -f $(OBJS))
+clear:
+	-(rm -f core *.old *.log *.out *~ \#*)
+cleanse: clean clear
+	@echo "	cleanse: removed OBJS + riffraff"
+clobber: clear
+	-(rm -f $(TARG) core *.o *.a *~)
+lint:	$(SRCS)
+	lint $(LINTOPT) $(SRCS)
+lint.log: $(SRCS)
+	rm -rf $@
+	lint $(LINTOPT) $(SRCS) > $@
+	@echo "linting found in $(@D)/$@"
+depend: $(SRCS)
+	makedepend $(IFLAGS) $(SRCS)
+
+#------ DEPENDENCIES & SPECIFIC BUILDS -------
+
+fourt.o:		fourt.f
+	$(FC) $(FFLAGS) -c fourt.f -o $@ 
+
+# $(ENC_O) $(DEC_O):	1encdec.h 2encdec.h 3encdec.h
+  $(IMG_O1) $(IMG_O2) $(COMP_O) $(MOT_O): $(HEADERS)
+
+bset.o:		bset.c
+bimgio.o:	bimgio.c
+fimgio.o:	fimgio.c
+simgio.o:	simgio.c
+uqnt.o:		uqnt.c
+ucoders.o:	ucoders.c
+utqnt.o:	utqnt.c
+utcoders.o:	utcoders.c
+laputq.o:	laputq.c
+qmfsub.o:	qmfsub.c
+dctimg.o:	dctimg.c
+fdctsub.o:	fdctsub.c
+squeezer.o:	squeezer.c
+lsqsub.o:	lsqsub.c
+warpers.o:	warpers.c
+trans_est.o:	trans_est.c
+affine_est.o:	affine_est.c
+sim_est.o:	sim_est.c
+3encode.o:	3encode.c
+2encode.o:	2encode.c
+1encode.o:	1encode.c
+0encode.o:	0encode.c
+encsub.o:	encsub.c
+3decode.o:	3decode.c
+2decode.o:	2decode.c
+1decode.o:	1decode.c
+0decode.o:	0decode.c
+decsub.o:	decsub.c
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+

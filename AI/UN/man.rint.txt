@@ -1,0 +1,79 @@
+RINT(3M)              MATHEMATICAL LIBRARY               RINT(3M)
+
+NAME
+     aint, anint, ceil, floor,  rint,  irint,  nint  -  round  to
+     integral value in floating-point or integer format
+
+SYNOPSIS
+     #include <math.h>
+
+     double aint(x)
+     double x;
+
+     double anint(x)
+     double x;
+
+     double ceil(x)
+     double x;
+
+     double floor(x)
+     double x;
+
+     double rint(x)
+     double x;
+
+     int irint(x)
+     double x;
+
+     int nint(x)
+     double x;
+
+DESCRIPTION
+     aint, anint, ceil, floor, and rint() convert a double  value
+     into  an  integral value in double format.  They vary in how
+     they choose the result when the argument is not  already  an
+     integral  value.   Here an integral value means a value of a
+     mathematical integer, which however might be  too  large  to
+     fit in a particular computer's int format.  All sufficiently
+     large values  in  a  particular  floating-point  format  are
+     already  integral;  in  IEEE  double-precision  format, that
+     means all values >= 2**52.   Zeros,  infinities,  and  quiet
+     NaNs  are  treated  as  integral  values by these functions,
+     which always preserve their argument's sign.
+
+     aint() returns the integral value between x and  0,  nearest
+     x.  This corresponds to IEEE rounding toward zero and to the
+     Fortran generic intrinsic function aint.
+
+     anint() returns the nearest  integral  value  to  x,  except
+     halfway  cases  are  rounded to the integral value larger in
+     magnitude.  This corresponds to the Fortran generic  intrin-
+     sic function anint.
+
+     ceil() returns the least  integral  value  greater  than  or
+     equal  to  x.   This  corresponds  to  IEEE  rounding toward
+
+Sun Release 4.1   Last change: 15 October 1987                  1
+
+RINT(3M)              MATHEMATICAL LIBRARY               RINT(3M)
+
+     positive infinity.
+
+     floor() returns the greatest integral  value  less  than  or
+     equal  to x.  This corresponds to IEEE rounding toward nega-
+     tive infinity.
+
+     rint() rounds x  to  an  integral  value  according  to  the
+     current IEEE rounding direction.
+
+     irint converts x into int format according  to  the  current
+     IEEE rounding direction.
+
+     nint() converts x into int format rounding  to  the  nearest
+     int value, except halfway cases are rounded to the int value
+     larger in magnitude.  This corresponds to the  Fortran  gen-
+     eric intrinsic function nint.
+
+Sun Release 4.1   Last change: 15 October 1987                  2
+ 
+

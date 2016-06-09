@@ -1,0 +1,852 @@
+
+0decode.c,20
+unsqueeze_0(11,150
+
+0encode.c,40
+#define ABS(5,75
+int squeeze_0(13,324
+
+1decode.c,98
+static decode(85,1905
+#define get_val(83,1861
+static int get_vsym(67,1507
+unsqueeze_1(39,1008
+
+1encode.c,179
+#define ABS(5,76
+static encode(155,3792
+#define encode_val(142,3444
+#define encodes(152,3724
+static get_frequencies(125,3154
+#define inc_val(115,2871
+int squeeze_1(61,1711
+
+2decode.c,187
+static decode(119,2827
+static decode_block(129,3006
+#define get_val(117,2783
+static int get_vsym(80,1941
+#define get_zrun(116,2739
+static int get_zsym(100,2385
+unsqueeze_2(46,1291
+
+2encode.c,359
+#define ABS(5,76
+#define STARTSTATE(63,1935
+static encode(202,5275
+static encode_block(237,6130
+#define encode_val(224,5782
+#define encode_zrun(212,5454
+#define encodes(234,6062
+static get_block_frequencies(166,4398
+static get_frequencies(128,3393
+#define inc_run(146,3836
+#define inc_val(156,4115
+#define inc_zrun(138,3590
+int squeeze_2(66,1996
+
+3decode.c,212
+#define STARTSTATE(46,1377
+static decode(113,2877
+static decode_block(123,3056
+#define get_nzrun(110,2745
+static int get_sym(90,2250
+#define get_val(111,2814
+#define get_zrun(109,2682
+unsqueeze_3(50,1438
+
+3encode.c,447
+#define ABS(5,76
+#define STARTSTATE(66,2148
+static encode(222,6076
+static encode_block(259,7018
+#define encode_nzrun(234,6317
+#define encode_run(236,6383
+#define encode_val(246,6670
+#define encode_zrun(232,6255
+#define encodes(256,6950
+static get_block_frequencies(182,5049
+static get_frequencies(138,3854
+#define inc_nzrun(155,4264
+#define inc_run(162,4487
+#define inc_val(172,4766
+#define inc_zrun(148,4051
+int squeeze_3(69,2208
+
+affine_est.c,136
+affine_parameter_estimate(19,283
+compute_affine_parameters(115,3035
+static print_affine_parameters(152,3601
+static printws(139,3373
+
+arralloc.c,194
+void **_alloc_array(8,168
+void *_alloc_vector(35,889
+_free_array(54,1285
+_free_vector(74,1640
+void **alloc_array(16,338
+void *alloc_vector(43,1056
+free_array(64,1442
+free_vector(83,1783
+
+barralloc.c,202
+byte **_alloc_barray(10,195
+byte *_alloc_bvector(32,722
+_free_barray(54,1200
+_free_bvector(71,1558
+byte **alloc_barray(18,353
+byte *alloc_bvector(40,877
+free_barray(62,1360
+free_bvector(79,1717
+
+bimgalloc.c,41
+alloc_bimage(10,188
+free_bimage(23,531
+
+bimgio.c,110
+_read_bimgstr(144,3629
+read_bimage(9,200
+read_bimgstr(71,1632
+write_bimage(24,501
+write_bimgstr(126,3106
+
+blkmot.c,221
+blkmc_fbi(11,261
+blkmc_predict(28,820
+blkmc_warp(43,1185
+get_fractional_velocity(152,4346
+get_integral_velocity(110,3364
+float int_match(131,3865
+float match(172,4945
+motion_estimation(90,2795
+warped_blk(70,2162
+
+bnzrhist.c,45
+void _bnzrhist(22,299
+void bnzrhist(10,127
+
+bnzrstats.c,16
+bnzrstats(6,85
+
+bpyralloc.c,54
+alloc_bpyr(30,596
+def_bpyr(10,190
+free_bpyr(42,821
+
+bqmfpyralloc.c,64
+alloc_bqmfpyr(34,733
+def_bqmfpyr(10,189
+free_bqmfpyr(50,1061
+
+bredexp.c,73
+_expand_odd(107,2667
+_reduce_odd(64,1568
+expand(27,507
+reduce(12,245
+
+bset.c,11
+bset(5,65
+
+bstats.c,13
+bstats(6,77
+
+btof.c,11
+btof(6,96
+
+btol.c,11
+btol(6,95
+
+btos.c,11
+btos(6,96
+
+bvhist.c,39
+void _bvhist(17,257
+void bvhist(6,92
+
+bvstats.c,14
+bvstats(6,83
+
+bzrstats.c,15
+bzrstats(6,86
+
+darralloc.c,209
+double **_alloc_darray(8,172
+double *_alloc_dvector(30,711
+_free_darray(52,1201
+_free_dvector(69,1567
+double **alloc_darray(16,332
+double *alloc_dvector(38,868
+free_darray(60,1365
+free_dvector(77,1730
+
+dblredexp.c,109
+_dbl_gauss_odd(68,1491
+_dbl_laplace_odd(129,2910
+dbl_gauss(51,1146
+dbl_laplace(112,2560
+halfband(12,255
+
+dctimg.c,13
+dctimg(3,21
+
+decsub.c,210
+#define NOTLEAF(116,2586
+short decode_sym(118,2688
+fflushbits(155,3621
+#define getabit(38,1077
+short getbits(138,3251
+short gettree(83,1917
+init_tree(51,1355
+print_tree(64,1582
+short read_tree(97,2171
+
+die.c,12
+die(11,284
+
+dimgalloc.c,41
+alloc_dimage(10,190
+free_dimage(23,539
+
+eigens2x2.c,14
+eigens(8,139
+
+eigsrt.c,15
+eigsrt(10,299
+
+encsub.c,292
+adjust(178,4736
+bld_tree(235,6322
+buildenc(383,9849
+cmptrees(208,5403
+fflushbits(442,11082
+heap(166,4546
+init_enc(304,8031
+init_tree(289,7763
+short make_table(63,1908
+maxchar(279,7627
+print_treetab(314,8157
+putbits(425,10760
+puttree(334,8601
+scale(121,3460
+write_tree(349,8941
+
+farralloc.c,205
+float **_alloc_farray(8,169
+float *_alloc_fvector(30,702
+_free_farray(52,1186
+_free_fvector(69,1548
+float **alloc_farray(16,328
+float *alloc_fvector(38,858
+free_farray(60,1348
+free_fvector(77,1709
+
+fclip.c,12
+fclip(6,69
+
+fcopy.c,16
+fcopy_img(5,47
+
+fdcts.c,291
+static int Log2(565,14864
+static int bitrev(582,15138
+dct(274,7193
+dct1d(414,10876
+dct2d(84,1570
+dct_2d(39,640
+dct_init(15,232
+#define even(6,67
+idct(346,9082
+idct1d(486,12851
+idct2d(181,4454
+idct_2d(61,1103
+static int ipow(555,14741
+#define odd(5,38
+static shuffle(594,15290
+
+fdctsub.c,429
+accum_dct_zrhist(219,4647
+alloc_dct_zrhist(196,4167
+double codeimg(13,189
+double get_dct_1table_huffman_rate(293,6101
+double get_dct_1table_rate(307,6397
+double get_dct_2table_huffman_rate(270,5744
+double get_dct_2table_rate(281,5928
+get_dct_zrhist(230,4877
+itnq(165,3638
+map_diag_1d_to_2d(88,2139
+map_diag_2d_to_1d(64,1601
+tnq(112,2678
+trunc(149,3341
+unifqnt(133,3053
+unifunqnt(184,3995
+zero_dct_zrhist(207,4458
+
+ffts.c,65
+fft2d(19,591
+fft_2d(102,3154
+ifft2d(45,1221
+ifft_2d(170,5228
+
+fileutils.c,66
+char *file_ext(48,1037
+int filetype(27,623
+char *typestr(8,141
+
+filtio.c,195
+get_1d_filter(51,1226
+get_1d_sym_filter(69,1604
+get_2d_filter(87,1994
+getpyrfilters(7,129
+getqmffilters(26,555
+read_1d_filter(105,2372
+read_1d_sym_filter(122,2746
+read_2d_filter(142,3201
+
+filtsub.c,324
+filter_2d(83,1876
+hor_decimate2_even(203,4485
+hor_decimate2_odd(184,4083
+hor_decimate2_sym(171,3877
+hor_filter(9,184
+hor_sym_filter(46,1001
+maximum_filter(135,3046
+minimum_filter(102,2342
+ver_decimate2_even(254,5559
+ver_decimate2_odd(235,5155
+ver_decimate2_sym(222,4949
+ver_filter(27,562
+ver_sym_filter(65,1466
+
+fimgalloc.c,41
+alloc_fimage(10,189
+free_fimage(23,535
+
+fimgimg.c,244
+fabsmax_img(82,1742
+fabsmaxl_img(130,2876
+fabsmin_img(94,2028
+fabsminl_img(142,3175
+fadd_img(10,95
+fdivide_img(46,921
+fmax_img(58,1196
+fmaxl_img(106,2314
+fmin_img(70,1469
+fminl_img(118,2595
+fmultiply_img(34,644
+fsubtract_img(22,367
+
+fimgio.c,110
+_read_fimgstr(143,3630
+read_fimage(9,201
+read_fimgstr(70,1632
+write_fimage(24,502
+write_fimgstr(125,3106
+
+fimgop.c,274
+fab(10,95
+fadd(119,1977
+fcore(104,1714
+fdivide(161,2635
+flog(62,951
+flower_bound(189,3098
+fmultiply(147,2414
+fnegate(23,304
+fpow(75,1178
+fspow(89,1441
+fsqrt(49,730
+fsquare(36,515
+fstretch(219,3586
+fsubtract(133,2193
+fthreshold(175,2854
+fupper_bound(204,3342
+
+fminmax.c,14
+fminmax(6,79
+
+fmse.c,18
+double fmse(5,71
+
+fmsv.c,18
+double fmsv(5,63
+
+fnzrhist.c,44
+void _fnzrhist(21,300
+void fnzrhist(9,127
+
+fnzrstats.c,16
+fnzrstats(6,86
+
+fpyralloc.c,94
+alloc_fpyr(54,1053
+alloc_fpyrs(22,408
+def_fpyr(34,647
+def_fpyrs(10,191
+free_fpyr(66,1276
+
+fredexp.c,125
+_fexpand(127,3026
+_freduce(60,1137
+fexpand(51,915
+fexpandpyr(33,599
+fgaussian(13,223
+flaplacian(23,409
+freduce(43,788
+
+fsdlap.c,75
+_fsd2burt_odd(85,1826
+_fsdlap_odd(46,926
+fsd2burt(29,589
+fsdlap(12,256
+
+fset.c,11
+fset(5,66
+
+fstats.c,13
+fstats(6,78
+
+ftob.c,11
+ftob(6,96
+
+ftol.c,11
+ftol(6,96
+
+ftos.c,11
+ftos(6,97
+
+fvhist.c,39
+void _fvhist(18,260
+void fvhist(6,93
+
+fvstats.c,14
+fvstats(6,84
+
+fzrstats.c,15
+fzrstats(6,87
+
+getblock.c,15
+getblock(5,85
+
+getnzrstats.c,18
+getnzrstats(6,83
+
+getvector.c,16
+getvector(6,87
+
+getvstats.c,16
+getvstats(6,81
+
+getzrstats.c,17
+getzrstats(6,84
+
+huffman.c,302
+static adjust(180,4616
+static bld_tree(238,6217
+static buildenc(308,8358
+static cmptrees(210,5280
+double fasthuff(30,1010
+double fasthuff(32,1050
+static heap(168,4415
+static init_enc(283,7609
+static make_table(82,1966
+static maxchar(277,7554
+double quickhuff(347,9317
+static scale(125,3295
+
+hvqmfpyralloc.c,67
+alloc_hvqmfpyr(34,834
+def_hvqmfpyr(10,192
+free_hvqmfpyr(50,1164
+
+hvqmfredexp.c,273
+_hor_qmfexpand_even(326,8586
+_hor_qmfexpand_odd(173,4495
+_hor_qmfreduce_even(221,6001
+_hor_qmfreduce_odd(57,1456
+_ver_qmfexpand_even(280,7441
+_ver_qmfexpand_odd(117,2958
+_ver_qmfreduce_even(247,6657
+_ver_qmfreduce_odd(83,2134
+hvqmfexpand(32,813
+hvqmfreduce(9,251
+
+imgalloc.c,92
+void **_alloc_image(6,76
+_free_image(33,823
+void **alloc_image(14,240
+free_image(43,982
+
+io.c,1143
+*fopen_image 1082,25319
+grok_read_short 1162,27283
+grok_write_short 1173,27431
+image_make_space 837,19631
+image_string_type 1205,27898
+image_type_string 1184,27567
+push_char 871,20667
+read_4bytes 1149,27101
+*read_dump 112,2875
+*read_grok 477,10665
+read_grok_1bit 516,11705
+read_grok_8bit 539,12119
+*read_image 38,839
+*read_image_dir 1137,26952
+*read_jlm 1040,24431
+*read_rast 456,10298
+*read_raw 588,13217
+*read_vis 258,6078
+read_vis_8bit 326,7802
+read_vis_float 356,8292
+read_vis_header 297,7085
+read_vis_really_a_binary_image 372,8573
+read_vis_s32bit 341,8044
+*read_vis_switch_to_binary_image 394,8971
+write_4bytes 1142,27018
+write_array_mathematica 1225,28305
+write_dump 89,2290
+write_grok 556,12401
+write_pbm 972,22942
+write_pgm 1004,23635
+write_pix 679,15292
+write_portable 955,22628
+write_postscript 808,18778
+write_postscript_1bit 886,20950
+write_postscript_u8bit 923,21840
+write_ps_file_comments 862,20431
+write_rast 422,9599
+write_rast_stream 438,9906
+write_raw 619,13829
+write_vis 150,3946
+write_vis_1bit 190,4931
+write_vis_8bit 208,5245
+write_vis_float 238,5748
+write_vis_s32bit 223,5493
+
+jacobi.c,55
+#define ABS(6,82
+#define ROTATE(8,140
+jacobi(18,619
+
+kernel.c,13
+kernel(8,97
+
+laputq.c,149
+double get_bin_frm_dist(61,1466
+double get_bin_frm_rate(81,1876
+double get_distortion(15,262
+double get_ecrate(31,749
+double get_repoff(48,1225
+
+larralloc.c,201
+long **_alloc_larray(8,166
+long *_alloc_lvector(30,693
+_free_larray(52,1171
+_free_lvector(69,1529
+long **alloc_larray(16,324
+long *alloc_lvector(38,848
+free_larray(60,1331
+free_lvector(77,1688
+
+limgalloc.c,41
+alloc_limage(10,188
+free_limage(23,531
+
+limgio.c,110
+_read_limgstr(143,3626
+read_limage(9,200
+read_limgstr(70,1631
+write_limage(24,501
+write_limgstr(125,3105
+
+lkflow.c,43
+static coarse_fine(53,1322
+lkflow(16,297
+
+lsqsub.c,537
+SinCos(376,11442
+blur(1242,36091
+compute_velocities(1281,36802
+extend(1259,36407
+float get_dfd(445,13279
+gradient_estimation(1195,34550
+lsq_fast(151,4573
+lsq_fourier(286,8608
+lsq_grad(640,18131
+lsq_grad_fast(741,21050
+lsq_lsqgrad(907,26182
+lsq_lsqgrad_fast(1018,29233
+lsq_opt(25,537
+lsq_poly(475,14025
+lsq_pr(393,11796
+matherr(260,7960
+float polyfit_error(584,17036
+printeigens(1337,38318
+printq(620,17796
+printwgama(1329,38087
+readq(603,17428
+row_grad_sum(861,24751
+row_lsqgrad_sum(1147,33229
+#define trunc(6,68
+
+ltob.c,11
+ltob(6,95
+
+ltof.c,11
+ltof(6,96
+
+ltos.c,11
+ltos(6,96
+
+lubksb.c,15
+lubksb(16,636
+
+ludcmp.c,15
+ludcmp(17,611
+
+misc.c,37
+double anint(8,132
+int nint(14,211
+
+nzrhist.c,78
+void accum_nzrhist(35,851
+void alloc_nzrhist(6,78
+void zero_nzrhist(22,605
+
+profile.c,148
+TIMER *alloc_timer(6,62
+void free_timer(49,825
+void timer_clear(15,211
+void timer_mark(28,363
+void timer_reset(22,307
+void timer_stats(39,517
+
+putblock.c,15
+putblock(5,80
+
+putvector.c,16
+putvector(6,85
+
+qmfpyralloc.c,61
+alloc_qmfpyr(34,731
+def_qmfpyr(10,189
+free_qmfpyr(50,1057
+
+qmfredexp.c,137
+_qmfexpand_even(300,8564
+_qmfexpand_odd(120,3079
+_qmfreduce_even(229,6664
+_qmfreduce_odd(48,1081
+qmfexpand(29,627
+qmfreduce(12,254
+
+qmfredexp_nowrap.c,76
+_qmfexpand(103,2509
+_qmfreduce(34,697
+qmfexpand(22,434
+qmfreduce(12,252
+
+qmfredexp_wrap.c,137
+_qmfexpand_even(286,7911
+_qmfexpand_odd(120,3076
+_qmfreduce_even(215,6011
+_qmfreduce_odd(48,1078
+qmfexpand(29,624
+qmfreduce(12,251
+
+qmfredexp_wrap_sym.c,137
+_qmfexpand_even(286,7911
+_qmfexpand_odd(120,3076
+_qmfreduce_even(215,6011
+_qmfreduce_odd(48,1078
+qmfexpand(29,624
+qmfreduce(12,251
+
+qmfsub.c,217
+double dpcm_codenzr_utq(259,7355
+double dpcm_codev_utq(161,4642
+double dpcm_codezr_utq(198,5696
+dpcm_ut_qnt_sym(133,3874
+double dpcmmsv(22,552
+get_qmfbins(43,1054
+get_qmfbins(74,2015
+get_qmfbins_debug(94,2512
+
+ratesub.c,309
+double get_0table_huffman_rate(10,315
+double get_0table_rate(19,433
+double get_1table_huffman_rate(29,542
+double get_1table_rate(42,831
+double get_2table_huffman_rate(56,1111
+double get_2table_rate(67,1286
+double get_3table_huffman_rate(79,1453
+double get_3table_rate(91,1666
+double getrate(104,1868
+
+redexp.c,73
+_expand_odd(104,2522
+_reduce_odd(64,1565
+expand(27,502
+reduce(12,240
+
+redirected.c,77
+char_special(16,230
+is_input_redirected(6,118
+is_output_redirected(11,174
+
+reflect.c,58
+hor_reflect(8,151
+reflect(126,3927
+ver_reflect(67,2039
+
+roi.c,108
+getrectroimask(33,431
+ROI *getroi(15,216
+getroimask(73,1373
+static line_check(133,3270
+roi2mask(25,340
+
+sarralloc.c,205
+short **_alloc_sarray(8,169
+short *_alloc_svector(30,702
+_free_sarray(52,1186
+_free_svector(69,1548
+short **alloc_sarray(16,328
+short *alloc_svector(38,858
+free_sarray(60,1348
+free_svector(77,1709
+
+seqio.c,235
+_read_field(105,2110
+_write_field(145,2793
+read_bfield(96,2005
+read_ffield(82,1821
+read_seqhdr(56,1106
+sclose(29,642
+seekfnum(49,1041
+sopen(6,70
+sseek(35,689
+write_bfield(136,2686
+write_ffield(122,2500
+write_seqhdr(69,1465
+
+sim_est.c,0
+
+simgalloc.c,41
+alloc_simage(10,189
+free_simage(23,535
+
+simgimg.c,0
+
+simgio.c,110
+_read_simgstr(143,3628
+read_simage(9,201
+read_simgstr(70,1632
+write_simage(24,502
+write_simgstr(125,3105
+
+snzrhist.c,44
+void _snzrhist(21,300
+void snzrhist(9,127
+
+snzrstats.c,16
+snzrstats(6,86
+
+spyralloc.c,0
+
+sqmfpyralloc.c,0
+
+squeezer.c,0
+
+sstats.c,13
+sstats(6,78
+
+stob.c,11
+stob(6,96
+
+stof.c,11
+stof(6,97
+
+stol.c,11
+stol(6,96
+
+svd.c,123
+#define ABS(20,353
+#define MAX(55,1302
+#define PYTHAG(51,1143
+#define SIGN(57,1393
+svbksb(30,794
+void svdcmp(66,1845
+
+svhist.c,39
+void _svhist(18,260
+void svhist(6,93
+
+svstats.c,14
+svstats(6,84
+
+szrhist.c,42
+void _szrhist(21,298
+void szrhist(9,128
+
+szrstats.c,15
+szrstats(6,87
+
+trans_est.c,86
+compute_translation(79,1648
+static printwgama(100,1946
+translation_estimate(19,298
+
+ucoders.c,95
+double codenzr_unif_qnt(99,2506
+double codev_unif_qnt(11,195
+double codezr_unif_qnt(42,1017
+
+uqnt.c,37
+unif_qnt(8,151
+unif_qnt_sym(28,635
+
+utcoders.c,80
+double codenzr_utq(106,2800
+double codev_utq(9,202
+double codezr_utq(43,1160
+
+utqnt.c,33
+ut_qnt(8,161
+ut_qnt_sym(32,785
+
+vhist.c,72
+void accum_vhist(30,606
+void alloc_vhist(6,76
+void zero_vhist(21,477
+
+vqio.c,226
+get_codebook(41,884
+get_fcodeword(64,1297
+get_scodeword(93,1757
+get_vqc_header(34,713
+get_vqt_header(5,43
+put_codebook(51,1089
+put_fcodeword(75,1446
+put_scodeword(104,1906
+put_vqc_header(27,543
+put_vqt_header(15,290
+
+warpers.c,148
+_affine_warp(79,2214
+_translation_warp(117,3228
+_warp(45,1316
+affine_warp(72,2118
+translation_warp(110,3124
+#define trunc(11,401
+warp(21,628
+
+warps.c,95
+bicubic_warp(68,1734
+bicubic_warp_aff(106,2823
+bilinear_warp(7,82
+bilinear_warp_aff(35,898
+
+zrhist.c,75
+void accum_zrhist(32,727
+void alloc_zrhist(6,79
+void zero_zrhist(21,540
+

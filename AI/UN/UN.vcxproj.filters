@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7fc2ed90-2bd8-4378-a4dd-98f716373ce9}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{deb1e871-c775-4132-8c52-b99c536ef077}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="unBug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unFlags.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unMath.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unMem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unParse.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unString.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unSys.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unVarg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

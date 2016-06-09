@@ -1,0 +1,1 @@
+#ifndef _ANSI_STDDEF_H#define _ANSI_STDDEF_H#include <ansi/machine/stddef.h>#endif /* _ANSI_STDDEF_H */

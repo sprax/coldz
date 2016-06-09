@@ -1,0 +1,38 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: AA - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\slines\LOCALS~1\Temp\RSPAF.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\h" /I "..\h\m" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FR"Debug/" /Fp"Debug/AA.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ 
+"D:\SRL\C\AI\AA\a.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\slines\LOCALS~1\Temp\RSPAF.tmp" 
+<h3>Output Window</h3>
+Compiling...
+a.c
+d:\srl\c\ai\aa\a.c(39) : warning C4018: '<=' : signed/unsigned mismatch
+d:\srl\c\ai\aa\a.c(39) : warning C4018: '<=' : signed/unsigned mismatch
+a.obj : error LNK2001: unresolved external symbol _iclose
+a.obj : error LNK2001: unresolved external symbol _gryRgbFlt
+a.obj : error LNK2001: unresolved external symbol _fltUsh
+a.obj : error LNK2001: unresolved external symbol _getrow
+a.obj : error LNK2001: unresolved external symbol _rowMalFlt
+a.obj : error LNK2001: unresolved external symbol _wrn
+a.obj : error LNK2001: unresolved external symbol _die
+a.obj : error LNK2001: unresolved external symbol _iopen
+LIBCD.lib(crt0.obj) : error LNK2001: unresolved external symbol _main
+a.exe : fatal error LNK1120: 9 unresolved externals
+Error executing cl.exe.
+
+
+
+<h3>Results</h3>
+a.obj - 10 error(s), 2 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,5 @@
+CC = gcc
+
+corres_tool : corres_tool.o io.o fimgalloc.o imgalloc.o die.o lkflowlib.o fpyralloc.o redexp.o lsqsub.o reflect.o warps.o eigens2x2.o fset.o limgio.o fileutils.o bimgio.o stob.o farralloc.o btos.o arralloc.o simgio.o fimgio.o stof.o ltob.o ftos.o bimgalloc.o limgalloc.o stol.o ltof.o simgalloc.o die.o filtio.o ftoblib.o btoflib.o fimgop.o ltos.o fimgimg.o btol.o ftol.o nrutil.o interp_flow.o triangulate.o
+	gcc -Wall -I../../h/  -DSGI -DIRIS -g corres_tool.o io.o fimgalloc.o imgalloc.o die.o lkflowlib.o fpyralloc.o redexp.o lsqsub.o reflect.o warps.o eigens2x2.o fset.o limgio.o fileutils.o bimgio.o stob.o farralloc.o btos.o arralloc.o simgio.o fimgio.o stof.o ltob.o ftos.o bimgalloc.o limgalloc.o stol.o ltof.o simgalloc.o filtio.o ftoblib.o btoflib.o fimgop.o ltos.o fimgimg.o btol.o ftol.o nrutil.o interp_flow.o triangulate.o -lm -lXm -lXt -lX11 -o corres_tool
+

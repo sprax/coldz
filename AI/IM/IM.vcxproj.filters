@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{69304e0f-3240-4c11-be72-bc01ea408e41}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{62bc3ebe-6385-4cdc-b3b8-5a8bb243e732}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="fxyComb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fxyQuadFwd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imagic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mxyFwd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbMark.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbPlugFlt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSmatAff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSmatAffBil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSmatAffNxt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSmatBil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSmatBil3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSmatBil4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSmatBil8.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSmatWts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgbSpatBil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowBord.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowCnvt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowComb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowCopy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowCpack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowDiff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowFile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowFillFlt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowFillUnc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NEW\rowFlow.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowGray.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowMake.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowMult.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowNorm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowNwts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowPclr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowPlugFlt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowPost.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowSGI.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowSmatBil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowSmatBiq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowSmatN.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowSmatSin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowSpatBil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowStat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowWarpFlt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowWarpUnc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rowZero.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mxyFwd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

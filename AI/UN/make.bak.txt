@@ -1,0 +1,88 @@
+####################################################
+# un/src/Makefile -- libun.a    S.R.Lines    93.5.24
+# NOTES at end of this Makefile.
+##
+  SHELL=	/bin/sh
+  MM=		iris
+  MFGR=		HP##	GNU make on HPs may not recognize $MAKEFLAGS==e
+  CC=		gcc -Wall ## redefine or override; NB: -ansi breaks on HP
+  CFLAGS=	-g
+  DEBUG=	_NO_DEBUG
+  IFLAGS=	-I${HOME}/c/h
+  CPPFLAGS=	-D$(MFGR) -D$(DEBUG) $(IFLAGS)
+  LDFLAGS=	-s
+  AR=		ar
+  ARFLAGS=	cruv
+  RANLIB=	ranlib## set RANLIB=@echo if redundant (HP, etc.)
+  INSTALL=	ln 
+  INSTOPT=
+  MALD=		$(HOME)/bin/$(MARC)/
+  ULIBS=	$(MALD)libun.a -lm ##	Because HP chokes on -L$(MALD)
+  RM=		rm -f ## Not rm -fr ?
+
+.c:
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LDFLAGS) $(ULIBS) -o $@
+.c.o:
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+EXES=	UnTest ctest
+INST=	$(MALD)libun.a
+
+default all:	lib ins exe
+lib:		libun.a
+bin exe test:	$(EXES)
+ins:	$(INST) ## Install forces
+
+libun.a:	unMath.o unString.o
+	$(AR) $(ARFLAGS) $@ $?
+	$(RANLIB)  $@
+##	-( $(INSTALL) $(@F) $(MALD)$(@F) ) ## A bad idea! ##
+
+$(INST):
+	-( $(RM) $@ )
+	-( $(INSTALL) $(@F) $@ )
+
+clean:
+	rm -f   *.o *~
+clobber:
+	rm -f   *.o *~ $(EXES)
+
+  $(MALD)libun.a:	libun.a
+  unMath.o unString.o:	unLib.h
+
+#
+# NOTES:
+# To keep this makefile simple, all system dependencies are
+# expressed tacitly in the macro definitions; use environment
+# variables and make -e, or make CC=acc, etc., to override them.
+# In order to cope with differences in the behavior of various
+# implementation of make, this makefile does not clean up .o files by
+# default; to get rid of them, use make all clean (but the the next
+# make will rebuild everything).
+#
+# NOTES: make lib vs. make install with ln as the install command:
+#     First, some constraints on the rules for installation:
+# The strategy of this makefile is to maintain its "installed" 
+# targets as hard links to local files (soft links inevitably lose
+# accross different file systems due to varying mount points).
+# Suppose foo is to be installed as /bin/foo; then once ./foo and /bin/foo
+# are linked, updating ./foo automatically updates /bin/foo, so nothing
+# should be done explicitly to /bin/foo.  On the other hand, if /bin/foo
+# ever becomes out of date with respect to foo, then to (re)establish this
+# link, /bin/foo must first be forcibly removed.  (On most systems, ln won't
+# replace an existing file, and any such attempt will result in make receiving
+# an error signal -- to prevent needless rebuilds, then, target installation
+# should be isolated from target creation.  
+#     Now, for ease of use (and, of course, flexibility as well as efficiency),
+# it is usually best to make installation the default, by putting installable
+# targets (or their symbolic proxies) in the default target list, *after*
+# any local targets on they depend on or are linked to  (e.g., as below:
+# default all: lib install).  This separates the procedures for creation 
+# and installation, and is consistant with the useful constraint that rules
+# always end with the production of their target.  To rebuild a local target
+# foo without affecting the installed target /bin/foo, first remove the local
+# link, then remake only that target (rm foo; make foo).
+#     Finally, a word on cleanup:
+# As of now, the default is to leave .o's around; use "make all clean" to
+# override this.
+

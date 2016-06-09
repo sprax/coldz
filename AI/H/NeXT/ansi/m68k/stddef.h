@@ -1,0 +1,1 @@
+#ifndef _ANSI_M68K_STDDEF_H#define _ANSI_M68K_STDDEF_H#ifndef NULL#define NULL ((void *)0)#endiftypedef long ptrdiff_t;#ifndef _SIZE_T#define _SIZE_Ttypedef unsigned long size_t;#endiftypedef unsigned short wchar_t;#define offsetof(type,identifier) ((size_t)&((type *)0)->identifier)#endif /* _ANSI_M68K_STDDEF_H */

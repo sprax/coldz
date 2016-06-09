@@ -1,0 +1,145 @@
+#
+# c/rha/src/makefile for RH libraries.    S.R.Lines    93.3.6-9.5
+#
+all:	ins
+
+#------ GLOBAL DEFS -------# To be overridden by locals
+include ${HOME}/c/make/MakeDefs ## Includes $INCD, $MALD, etc.
+
+#------ LOCAL DEFS ------- directory syms end in D & vals end in "/"
+IFLAGS=	-I../../h -I../../h/sarnoff
+
+CORO=	corres_tool.o io.o fimgalloc.o imgalloc.o die.o \
+	lkflowlib.o fpyralloc.o redexp.o lsqsub.o reflect.o \
+	warps.o eigens2x2.o fset.o limgio.o fileutils.o bimgio.o \
+	stob.o farralloc.o btos.o arralloc.o simgio.o fimgio.o \
+	stof.o ltob.o ftos.o bimgalloc.o limgalloc.o stol.o ltof.o \
+	simgalloc.o die.o filtio.o ftoblib.o btoflib.o fimgop.o \
+	ltos.o fimgimg.o btol.o ftol.o nrutil.o interp_flow.o triangulate.o
+corres_tool : $(CORO)
+	gcc -Wall -I../../h/  -DSGI -DIRIS -g \
+	$(CORO) \
+	-lm -lXm -lXt -lX11 -o corres_tool
+
+
+##	RH-SMALL: Just enough to link gg.
+RHS_O=	lkflow.o lsqsub.o warpers.o warps.o \
+	bimgalloc.o fimgalloc.o fpyralloc.o imgalloc.o \
+	farralloc.o arralloc.o \
+	redexp.o eigens2x2.o mathtls.o \
+	fcopy.o filtio.o fimgimg.o fimgop.o fset.o reflect.o ## die.o
+RHS_C=	$(RHS_O:.o=.c)
+  RHS_A=	librhs.a
+$(RHS_A):	$(RHS_O)
+
+
+COMP_O=	uqnt.o ucoders.o utqnt.o utcoders.o \
+	laputq.o qmfsub.o dctimg.o \
+	fdctsub.o ## squeezer.o
+COMP_C=	$(COMP_O:.o=.c)
+  COMP_A=	libcomp.a
+$(COMP_A):	$(COMP_O)
+
+
+MOT_O=	affine_est.o lkflow.o lsqsub.o trans_est.o \
+	warps.o warpers.o ## sim_est.o 
+MOT_C=	$(MOT_O:.o=.c)
+  MOT_A=	libmot.a
+$(MOT_A):	$(MOT_O)
+
+IMG_O1=	mmath.o bset.o \
+	bimgio.o fimgio.o limgio.o \
+	simgio.o ftoblib.o stob.o ltob.o \
+	btoflib.o stof.o ltof.o btos.o \
+	ftos.o ltos.o btol.o ftol.o stol.o imgalloc.o \
+	bimgalloc.o fimgalloc.o simgalloc.o \
+	limgalloc.o dimgalloc.o fpyralloc.o \
+	bpyralloc.o qmfpyralloc.o \
+	arralloc.o barralloc.o farralloc.o \
+	sarralloc.o larralloc.o darralloc.o \
+	die.o profile.o redirected.o \
+	filtio.o fileutils.o fimgop.o \
+	hvqmfpyralloc.o fimgimg.o \
+	sstats.o bvstats.o fvstats.o \
+	svstats.o bzrstats.o fzrstats.o szrstats.o
+IMG_O2=	fcopy.o fset.o fclip.o fmse.o \
+	fmsv.o fminmax.o bstats.o fstats.o \
+	bnzrstats.o fnzrstats.o snzrstats.o \
+	getvstats.o getzrstats.o getnzrstats.o \
+	vhist.o bvhist.o fvhist.o svhist.o \
+	zrhist.o szrhist.o nzrhist.o \
+	bnzrhist.o fnzrhist.o snzrhist.o \
+	ratesub.o huffman.o \
+	reflect.o qmfredexp.o hvqmfredexp.o \
+	redexp.o dblredexp.o fsdlap.o \
+	filtsub.o kernel.o \
+	fdcts.o ffts.o getblock.o putblock.o \
+	getvector.o putvector.o vqio.o \
+	seqio.o svdlib.o eigens2x2.o jacobi.o eigsrt.o \
+	ludcmp.o lubksb.o blkmot.o \
+	mathtls.o roi.o 
+#	bredexp.o sqmfpyralloc.o bqmfpyralloc.o spyralloc.o #don't use bredexp!
+IMG_C1=	$(IMG_O1:.o=.c)
+IMG_C2=	$(IMG_O2:.o=.c)
+  IMG_A=	$(LIB)libimg.a 
+$(IMG_A):	$(IMG_O1) $(IMG_O2)
+
+ENC_O=	3encode.o 2encode.o 1encode.o \
+	0encode.o encsub.o
+ENC_C=	$(ENC_O:.o=.c)
+  ENC_A=	libenc.a
+$(ENC_A):	$(ENC_O)
+
+DEC_O=	3decode.o 2decode.o 1decode.o \
+	0decode.o decsub.o
+DEC_C=	$(DEC_O:.o=.c)
+  DEC_A=	libdec.a
+$(DEC_A):	$(DEC_O)
+
+######	LEFTOVERS
+OLD_O=	lsqaffflow.o lsqplnseq.o
+OLD_C=	$(OLD_O:.o=.c)
+
+  OBJL= $(IMG_O1) $(IMG_O2) $(COMP_O) $(MOT_O) ## $(ENC_O) $(DEC_O)
+  SRCL=	$(IMG_C2) $(IMG_C2) $(COMP_C) $(MOT_C) ## $(ENC_C) $(DEC_C)
+  OBJS=	$(OBJL)   $(EXE_O)  $(OLD_O)
+  SRCS=	$(SRCL)   $(EXE_C)  
+  LIBS= $(RHS_A)  $(IMG_A)  $(COMP_A) $(MOT_A) ## $(ENC_A) $(DEC_A)
+  TARG=	$(EXES)   $(OBJS)   $(LIBS)
+
+  INST=	$(MALD)$(RHS_A) ## $(MALD)$(COMP_A) $(MALD)$(MOT_A) $(MALD)$(IMG_A)
+
+#------ COMMANDS & OPTIONS -------#
+# CFLAGS=	-O4 -fsingle -DSUN
+  CFLAGS=	-O3
+# IFLAGS=	-I$(INCD)
+
+#------ SUFFIXES & RULES ------# Put local rules BEFORE the include!
+include ${HOME}/c/make/MakeRules
+
+#------ FILE TARGETS -------# target name = last output pathname = $@
+# Target order: lib, exe, bin, install, dir, text, misc, cleanup
+
+.PRECIOUS: $(RHS_A) $(IMG_A) $(COMP_A) $(MOT_A) $(ENC_A) $(DEC_A)
+
+$(LIBS):
+	$(AR) ru  $@ $?
+	$(RANLIB) $@
+
+$(INST): $$(@F)
+	-($(RM)  $@)
+	ln $(@F) $@
+
+#	@echo ""
+#	@echo "Please do not remake targets here til after the ARPA demo"
+#	ls -il $(@F) $@
+
+#------ PROXY (SYMBOLIC) TARGETS ------#
+include ${HOME}/c/make/MakeTargs ## bin, exe, ins, lib, etc: GENERIC
+
+#------ DEPENDENCIES (if not covered by rules) ------# makedepend to file.
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+
+

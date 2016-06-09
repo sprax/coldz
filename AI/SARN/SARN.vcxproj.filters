@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0dbc1a93-443b-4532-8ec3-8a9777127e81}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{b73a30cd-d8c8-4ee7-a67c-ab60b1db8a2c}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="0decode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="0encode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="affine_est.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="barralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bimgalloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bimgio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="blkmot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bnzrhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bnzrstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bpyralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bqmfpyralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bredexp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="breflect.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="btoflib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="btol.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="btos.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bvhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bvstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bzrstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="darralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dblredexp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dctimg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="die.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dimgalloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="eigens2x2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="eigsrt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="farralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fclip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fcopy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fdcts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fdctsub.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ffts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fileutils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filtio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filtsub.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fimgalloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fimgimg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fimgio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fimgop.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fminmax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fmse.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fmsv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fnzrhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fnzrstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fpyralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fredexp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fsdlap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ftoblib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ftol.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ftos.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fvhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fvstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fzrstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="getblock.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="getnzrstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="getvector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="getvstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="getzrstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="huffman.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hvqmfpyralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hvqmfredexp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="img_util.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgalloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="jacobi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="kernel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="laputq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="larralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="limgalloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="limgio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lkflow.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lsqsub.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lsqsub_fwd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ltob.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ltof.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ltos.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lubksb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ludcmp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mathtls.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mmath.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nzrhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="profile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="putblock.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="putvector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qmfpyralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qmfredexp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qmfsub.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ratesub.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="redexp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="redexp_fwd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="redirected.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="reflect.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="roi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sarralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seqio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sim_est.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="simgalloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="simgimg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="simgio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snzrhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snzrstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spyralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqmfpyralloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="squeezer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stob.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stof.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stol.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="svdlib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="svhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="svstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="szrhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="szrstats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="trans_est.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="triangulate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ucoders.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="uqnt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utcoders.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utqnt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vqio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warpers.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warps.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="zrhist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
