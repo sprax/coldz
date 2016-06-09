@@ -34,7 +34,7 @@ void *car(List l);
 void *second(List l);
 void *nth(List l, int n);
 void *popIntern(List *l);
-BOOLEAN endp(List l);
+int  endp(List l);
 List cons(void *theCar, List theCdr);
 void map(List l, mapFun *f);
 List collect(List l, collectFun *c);

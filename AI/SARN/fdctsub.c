@@ -6,7 +6,7 @@
 
 /*
 extern void trunc();  // conflicting declaration in sgi/sysV: math.h
-extern void trunc(float *in,float *out,int lb,int ub,int num_coeff);
+extern void trunc_sarn(float *in,float *out,int lb,int ub,int num_coeff);
 */
 
 
@@ -155,7 +155,7 @@ int lb,ub;
 
 
 #ifndef sgi /* @@spraxlo */
-void trunc(in,out,lb,ub,num_coeff)
+void trunc_sarn(in,out,lb,ub,num_coeff)
 float *in,*out;
 int lb,ub,num_coeff;
 {
@@ -165,7 +165,7 @@ int lb,ub,num_coeff;
   coeff_num = 1;
   for (p=in+lb, q=out+lb, fin=in+ub; p <= fin; p++, q++, coeff_num++)
     if (coeff_num < num_coeff) 
-      *q = anint((double) *p);
+      *q = (float)anint((double) *p);
     else
       *q = 0.0;
 }
@@ -197,7 +197,7 @@ int lb,ub;
   register float *p,*q,*fin;
 
   for (p=in+lb, q=out+lb, fin=in+ub; p <= fin; p++, q++)
-    *q = *p * bin;
+    *q = (float)(*p * bin);
 }
 
 

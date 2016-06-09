@@ -322,7 +322,7 @@ void rowWarpTrnFlt(pfl *dpp, pfl *spp, pfl *vX, pfl *vY
             else if (iy < 0)
                 iy = 0;
             fx = (flt)(fact * *pX++);
-            fx = k - ITRUNC(fx);
+            ix = k - (int)ITRUNC(fx);
             if (ix > wide)
                 ix = wide;
             else if (ix < 0)

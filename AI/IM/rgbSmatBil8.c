@@ -10,10 +10,10 @@
 #include        <string.h>      /* memset */
 #endif
 #include        <math.h>
-#include        <unBug.h>
-#include        <unMath.h>
-#include        <unTypes.h>
-#include        <unFlags.h>
+#include        <un/unBug.h>
+#include        <un/unMath.h>
+#include        <un/unTypes.h>
+#include        <un/unFlags.h>
 #include        <m/rowZero.h>
 #include        <m/mj.h>
 #include        <m/rowSmat.h>

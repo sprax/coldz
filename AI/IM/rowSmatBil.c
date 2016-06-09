@@ -27,9 +27,9 @@
  *****************************************************************************/
 #define 	 NDEBUG 1
 #include	<assert.h>
-#include	<unBug.h>
-#include	<unMath.h>
-#include	<unTypes.h>
+#include	<un/unBug.h>
+#include	<un/unMath.h>
+#include	<un/unTypes.h>
 #include	<m/rowZero.h>
 #include	<m/mj.h>
 #include	<m/rowSmat.h>
