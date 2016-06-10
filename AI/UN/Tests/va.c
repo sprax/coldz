@@ -69,7 +69,7 @@ va_list args;
 #endif /* STDARG ------------------------------------------------*/
 
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 int mod, save;
 float floo;
