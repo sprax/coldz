@@ -548,6 +548,3 @@ rgbSmatAffBil3
         }
     }
 
-
-
-

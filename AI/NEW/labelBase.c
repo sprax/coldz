@@ -27,7 +27,7 @@ readImgLabels(char *pathname)
         return NULL;
     }
     while (fgets(buf, 256, fp) != NULL) {
-        if (buf[0] == '#') 
+        if (buf[0] == '#')
             continue;
         if (sscanf_s(buf, "%s %f %f", &name[0], 80, &x, &y) == 3) {
             img_label = (img_label_t *)calloc(1, sizeof(img_label_t));

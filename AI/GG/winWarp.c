@@ -82,10 +82,10 @@ extern	void	pseudorgb(void);			      /* vcolor.c */
 #define YSIZE   4
 #define TOTAL           (XSIZE*YSIZE)
 #define WRAPY(y)        ((y)%YSIZE)
-
+#define SLEN    256
 static	DISPIMAGE *movie[MAXFRAMES];
 static	DISPIMAGE *movieS[32];
-static	char	Ss[256], winTitle[320];
+static	char	Ss[SLEN], winTitle[TLEN];
 static 	long    orgX, orgY;
 static	int	wdMain, htMain, wdShow, htShow;
 static	int 	imgmode = RGBIMG;
@@ -441,7 +441,7 @@ readICCVparams(void)
 
 #if 11
     fi = popen("file /home/vu/mjones/images/face5/ICCV-params", "r");
-    fscanf_s(fi, "%s %s", str1, str2);
+    fscanf_s(fi, "%s %s", str1, SLEN, str2, SLEN);
     pclose(fi);
     if (strcmp(str2, "No")) {
         fi = popen("wc -c /home/vu/mjones/images/face5/ICCV-params", "r");
@@ -451,9 +451,10 @@ readICCVparams(void)
         }
         pclose(fi);
         if (nbytes > 26) {
-            if ((fi = fopen_s(ipath, "r")) != NULL) {
+            errno_t err = fopen_s(&fi, ipath, "r");
+            if (err) {
                 if (fgets(sts, 256, fi) != NULL) {
-                    if (3 == (nr = sscanf(sts, " %lf %lf %lf ", &rX, &rY, &rZ))) {
+                    if (3 == (nr = sscanf_s(sts, " %lf %lf %lf ", &rX, &rY, &rZ))) {
                         prn("readICCVparams %d XYZ: %.3f %.3f %.3f", nframes, rX, rY, rZ);
                         winSlidersCB(rX, rY, rZ);
                     }
@@ -469,7 +470,9 @@ readICCVparams(void)
             }
         }
     }
+#ifdef SGI
     sginap(67);	/* hundredths of a second */
+#endif
     return;
 #else
     if ((fi = fopen_s(ipath, "r")) != NULL) {
@@ -618,18 +621,18 @@ readICCVparams(void)
         pDmj    fD = wwD->fD;   int fX = fD->x, fY = fD->y, fW = fD->w, fH = fD->h;
 
         if (Options & O_FWRD || Devopts & O_BOTH) {
-            sprintf_s(Ss, "%s-%s", mob[nA]->name, mob[nB]->name);
+            sprintf_s(Ss, SLEN, "%s-%s", mob[nA]->name, mob[nB]->name);
             writeFlows(fvX[nB], fvY[nB], fX, fY, fW, fH, Ss, 'F', 1);
         }
         if (Options & O_BACK || Devopts & O_BOTH) {
-            sprintf_s(Ss, "%s-%s", mob[nA]->name, mob[nB]->name);
+            sprintf_s(Ss, SLEN, "%s-%s", mob[nA]->name, mob[nB]->name);
             writeFlows(bvX[nB], bvY[nB], fX, fY, fW, fH, Ss, 'B', 1);
         }
         return 0;
     }
 
 
-#define RETITLE(S)      {sprintf_s(Ss,"%s: %s",wA->T,(S)); wintitle(Ss);}
+#define RETITLE(S)      {sprintf_s(Ss, SLEN, "%s: %s",wA->T,(S)); wintitle(Ss);}
 #define ModeTil(M,S)    WLmode = M; RETITLE(S)
 
     static char *msOpts = "OPTS %t|Warn/Show %x101|A-Pixels %x102|B-Pixels %x103|\
@@ -781,7 +784,7 @@ readICCVparams(void)
             case  63: ModeTil(STOPPED, "CLONED");           Wclone(tW, 0);   	break;
             case  64: RETITLE("Save Flow Files");  saveFlowFiles(wwD, nA, nB);    break;
             case  65: RETITLE("Read Flow Files");
-                sprintf_s(Ss, "%s-%s", mob[nA]->name, mob[nB]->name);
+                sprintf_s(Ss, SLEN, "%s-%s", mob[nA]->name, mob[nB]->name);
                 readFlows(&fvX[nB], &fvY[nB], fX, fY, fW, fH, 0, Ss, 'F', 1);
                 if (Devopts & O_PTRS)
                     rgbWarpBilFlt(mB->prew, mB->rgbi, fvX[nB], fvY[nB], sX, sY, sW, sH, sX, sY, sW, sH, 1.0);
@@ -821,13 +824,13 @@ readICCVparams(void)
         }
         wid = winget();
 
-        sprintf_s(Ss, "[A] %s", mA->name);
+        sprintf_s(Ss, SLEN, "[A] %s", mA->name);
         wA = showFm(mA->rgbi, mA->sD, Ss, Zoom, 0);
         wA->in = nA;
         wA->act = &markA;
         wA->mnu = &editM;
 
-        sprintf_s(Ss, "[B] %s", mB->name);
+        sprintf_s(Ss, SLEN, "[B] %s", mB->name);
         wB = showFm(mB->rgbi, mB->sD, Ss, Zoom, 0);
         wB->in = nB;
         wB->act = &moveB;
@@ -875,11 +878,11 @@ readICCVparams(void)
         getorigin(&orgX, &orgY);
         while (getbutton(device)) {
             if (v == wwD->dWin) {
-                n = (nframes * (getvaluator(MOUSEX) - orgX)) / (float)wdMain;
+                n = (int)((nframes * (getvaluator(MOUSEX) - orgX)) / (float)wdMain);
                 gotoframe(n);
             }
             else if (v == wwD->sWin) {
-                n = (nframeS * (getvaluator(MOUSEX) - orgX)) / (float)wdShow;
+                n = (int)((nframeS * (getvaluator(MOUSEX) - orgX)) / (float)wdShow);
                 gotoframeS(n);
             }
         }
@@ -921,10 +924,10 @@ readICCVparams(void)
 
             msMark = "Mark %t|example %x31|Grid %x32|What? %x33";
             mpMark = defpup(msMark);
-            sprintf_s(Ss, "EDIT CRS %%t %%F");
+            sprintf_s(Ss, SLEN, "EDIT CRS %%t %%F");
             for (pval = 1; pval < NumSrc; pval++) {
-                sprintf_s(str, "|0 - %ld %%x%ld", pval, (pval + EDIT_SM_OFF));
-                strcat_s(Ss, str);
+                sprintf_s(str, SLEN, "|0 - %ld %%x%ld", pval, (pval + EDIT_SM_OFF));
+                strcat_s(Ss, SLEN, str);
             }
             msEdit = Ss;
             mpEdit = defpup(msEdit, editSubMenuFunc);
@@ -1023,11 +1026,11 @@ readICCVparams(void)
     {
         long 	wid, xframe, yframe, dispmode;
 
-        xframe = zoom*xsize;
-        yframe = zoom*ysize;
+        xframe = (long)(zoom*xsize);
+        yframe = (long)(zoom*ysize);
         prefsize(xframe, yframe);
-        sprintf_s(winTitle, "%s(%d)", ProgName, NumSrc);
-        sprintf_s(Ss, "%s %s", winTitle, wtil);
+        sprintf_s(winTitle, TLEN, "%s(%d)", ProgName, NumSrc);
+        sprintf_s(Ss, SLEN, "%s %s", winTitle, wtil);
         if (flags)
             prefposition(1280 - xframe, 1279, 1024 - yframe, 1023);
         else
@@ -1076,8 +1079,8 @@ readICCVparams(void)
         pDmj	sD = wwD->sD;
 
         InShowWid = dbWin(sD->w, sD->h, "ShowWin", 1);
-        wdShow = zoom * sD->w;
-        htShow = zoom * sD->h;
+        wdShow = (int)(zoom * sD->w);
+        htShow = (int)(zoom * sD->h);
         wwD->sWin = Wreg(InShowWid, sD, til, zoom, zoom, 0);
         wwD->sWin->act = &warpAct;
         /*
@@ -1097,7 +1100,8 @@ readICCVparams(void)
         int     j, line, tween;
         FILE    *fi;
 
-        if (!(fi = fopen_s(path, "r"))) {
+        errno_t err = fopen_s(&fi, path, "r");
+        if (err) {
             warn("parmReadXYZ [%s]: can't open %s, returning 0", __FILE__, path);
             return 0;
         }
@@ -1107,8 +1111,8 @@ readICCVparams(void)
                 /* fprintf(stderr,"[%3d]: %s",j,str); */
             }
             else {
-                if (3 != (j = sscanf(str, " %lf %lf %lf ", &rX, &rY, &rZ))
-                    && 3 != (j = sscanf(str, " %*[^:]: %lf %lf %lf ", &rX, &rY, &rZ)))
+                if (3 != (j = sscanf_s(str, " %lf %lf %lf ", &rX, &rY, &rZ))
+                    && 3 != (j = sscanf_s(str, " %*[^:]: %lf %lf %lf ", &rX, &rY, &rZ)))
                     die("parmReadXYZ: parse error at tween %d, line %d, sscanf %d:\n%s"
                         , tween, line, j, str);
                 else {
@@ -1227,5 +1231,3 @@ readICCVparams(void)
         /* winLoop(); -- done in mainN.c */
         return wwD->ndst = nframes;
     }
-
-
